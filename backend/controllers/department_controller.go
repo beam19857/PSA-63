@@ -15,6 +15,9 @@ type DepartmentController struct {
 	client *ent.Client
 	router gin.IRouter
 }
+type Department struct {
+	DepartmentName string
+}
 
 // CreateDepartment handles POST requests for adding department entities
 // @Summary Create department
