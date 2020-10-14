@@ -1,9 +1,9 @@
 package schema
 
 import (
-    "github.com/facebook/ent"
-    "github.com/facebook/ent/schema/field"
-    "github.com/facebook/ent/schema/edge"
+    "github.com/facebookincubator/ent"
+    "github.com/facebookincubator/ent/schema/field"
+    "github.com/facebookincubator/ent/schema/edge"
 )
 
 
@@ -15,15 +15,13 @@ type Expertise struct {
 // Fields of the Expertise.
 func (Expertise) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("ExpertiseID"),
 		field.String("ExpertiseName"),
-		//field.String("Licenes"),
 	}
 }
 
 // Edges of the Expertise.
 func (Expertise) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("ExpertiseUser",User.Type),
+		edge.To("ExpertiseUser",User.Type).StorageKey(edge.Column("ExpertiseID")),
 	}
 }

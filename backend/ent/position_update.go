@@ -9,9 +9,9 @@ import (
 	"github.com/beam19857/app/ent/position"
 	"github.com/beam19857/app/ent/predicate"
 	"github.com/beam19857/app/ent/user"
-	"github.com/facebook/ent/dialect/sql"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
-	"github.com/facebook/ent/schema/field"
+	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // PositionUpdate is the builder for updating Position entities.
@@ -25,19 +25,6 @@ type PositionUpdate struct {
 // Where adds a new predicate for the builder.
 func (pu *PositionUpdate) Where(ps ...predicate.Position) *PositionUpdate {
 	pu.predicates = append(pu.predicates, ps...)
-	return pu
-}
-
-// SetPositionID sets the PositionID field.
-func (pu *PositionUpdate) SetPositionID(i int) *PositionUpdate {
-	pu.mutation.ResetPositionID()
-	pu.mutation.SetPositionID(i)
-	return pu
-}
-
-// AddPositionID adds i to PositionID.
-func (pu *PositionUpdate) AddPositionID(i int) *PositionUpdate {
-	pu.mutation.AddPositionID(i)
 	return pu
 }
 
@@ -152,20 +139,6 @@ func (pu *PositionUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := pu.mutation.PositionID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: position.FieldPositionID,
-		})
-	}
-	if value, ok := pu.mutation.AddedPositionID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: position.FieldPositionID,
-		})
-	}
 	if value, ok := pu.mutation.PositionName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -227,19 +200,6 @@ type PositionUpdateOne struct {
 	config
 	hooks    []Hook
 	mutation *PositionMutation
-}
-
-// SetPositionID sets the PositionID field.
-func (puo *PositionUpdateOne) SetPositionID(i int) *PositionUpdateOne {
-	puo.mutation.ResetPositionID()
-	puo.mutation.SetPositionID(i)
-	return puo
-}
-
-// AddPositionID adds i to PositionID.
-func (puo *PositionUpdateOne) AddPositionID(i int) *PositionUpdateOne {
-	puo.mutation.AddPositionID(i)
-	return puo
 }
 
 // SetPositionName sets the PositionName field.
@@ -351,20 +311,6 @@ func (puo *PositionUpdateOne) sqlSave(ctx context.Context) (po *Position, err er
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Position.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := puo.mutation.PositionID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: position.FieldPositionID,
-		})
-	}
-	if value, ok := puo.mutation.AddedPositionID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: position.FieldPositionID,
-		})
-	}
 	if value, ok := puo.mutation.PositionName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,

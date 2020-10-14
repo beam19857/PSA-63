@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/beam19857/app/ent/expertise"
-	"github.com/facebook/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql"
 )
 
 // Expertise is the model entity for the Expertise schema.
@@ -15,12 +15,8 @@ type Expertise struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// ExpertiseID holds the value of the "ExpertiseID" field.
-	ExpertiseID int `json:"ExpertiseID,omitempty"`
 	// ExpertiseName holds the value of the "ExpertiseName" field.
 	ExpertiseName string `json:"ExpertiseName,omitempty"`
-	// Licenes holds the value of the "Licenes" field.
-	Licenes string `json:"Licenes,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the ExpertiseQuery when eager-loading is set.
 	Edges ExpertiseEdges `json:"edges"`
@@ -48,9 +44,7 @@ func (e ExpertiseEdges) ExpertiseUserOrErr() ([]*User, error) {
 func (*Expertise) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullInt64{},  // ExpertiseID
 		&sql.NullString{}, // ExpertiseName
-		&sql.NullString{}, // Licenes
 	}
 }
 
@@ -66,20 +60,10 @@ func (e *Expertise) assignValues(values ...interface{}) error {
 	}
 	e.ID = int(value.Int64)
 	values = values[1:]
-	if value, ok := values[0].(*sql.NullInt64); !ok {
-		return fmt.Errorf("unexpected type %T for field ExpertiseID", values[0])
-	} else if value.Valid {
-		e.ExpertiseID = int(value.Int64)
-	}
-	if value, ok := values[1].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field ExpertiseName", values[1])
+	if value, ok := values[0].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field ExpertiseName", values[0])
 	} else if value.Valid {
 		e.ExpertiseName = value.String
-	}
-	if value, ok := values[2].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field Licenes", values[2])
-	} else if value.Valid {
-		e.Licenes = value.String
 	}
 	return nil
 }
@@ -112,12 +96,8 @@ func (e *Expertise) String() string {
 	var builder strings.Builder
 	builder.WriteString("Expertise(")
 	builder.WriteString(fmt.Sprintf("id=%v", e.ID))
-	builder.WriteString(", ExpertiseID=")
-	builder.WriteString(fmt.Sprintf("%v", e.ExpertiseID))
 	builder.WriteString(", ExpertiseName=")
 	builder.WriteString(e.ExpertiseName)
-	builder.WriteString(", Licenes=")
-	builder.WriteString(e.Licenes)
 	builder.WriteByte(')')
 	return builder.String()
 }

@@ -6,14 +6,13 @@ import (
 	"context"
 	"fmt"
 	"sync"
-	"time"
 
 	"github.com/beam19857/app/ent/department"
 	"github.com/beam19857/app/ent/expertise"
 	"github.com/beam19857/app/ent/position"
 	"github.com/beam19857/app/ent/user"
 
-	"github.com/facebook/ent"
+	"github.com/facebookincubator/ent"
 )
 
 const (
@@ -38,8 +37,6 @@ type DepartmentMutation struct {
 	op                     Op
 	typ                    string
 	id                     *int
-	_DepartmentID          *int
-	add_DepartmentID       *int
 	_DepartmentName        *string
 	clearedFields          map[string]struct{}
 	_DepartmentUser        map[int]struct{}
@@ -125,63 +122,6 @@ func (m *DepartmentMutation) ID() (id int, exists bool) {
 		return
 	}
 	return *m.id, true
-}
-
-// SetDepartmentID sets the DepartmentID field.
-func (m *DepartmentMutation) SetDepartmentID(i int) {
-	m._DepartmentID = &i
-	m.add_DepartmentID = nil
-}
-
-// DepartmentID returns the DepartmentID value in the mutation.
-func (m *DepartmentMutation) DepartmentID() (r int, exists bool) {
-	v := m._DepartmentID
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDepartmentID returns the old DepartmentID value of the Department.
-// If the Department object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *DepartmentMutation) OldDepartmentID(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldDepartmentID is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldDepartmentID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDepartmentID: %w", err)
-	}
-	return oldValue.DepartmentID, nil
-}
-
-// AddDepartmentID adds i to DepartmentID.
-func (m *DepartmentMutation) AddDepartmentID(i int) {
-	if m.add_DepartmentID != nil {
-		*m.add_DepartmentID += i
-	} else {
-		m.add_DepartmentID = &i
-	}
-}
-
-// AddedDepartmentID returns the value that was added to the DepartmentID field in this mutation.
-func (m *DepartmentMutation) AddedDepartmentID() (r int, exists bool) {
-	v := m.add_DepartmentID
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetDepartmentID reset all changes of the "DepartmentID" field.
-func (m *DepartmentMutation) ResetDepartmentID() {
-	m._DepartmentID = nil
-	m.add_DepartmentID = nil
 }
 
 // SetDepartmentName sets the DepartmentName field.
@@ -277,10 +217,7 @@ func (m *DepartmentMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *DepartmentMutation) Fields() []string {
-	fields := make([]string, 0, 2)
-	if m._DepartmentID != nil {
-		fields = append(fields, department.FieldDepartmentID)
-	}
+	fields := make([]string, 0, 1)
 	if m._DepartmentName != nil {
 		fields = append(fields, department.FieldDepartmentName)
 	}
@@ -292,8 +229,6 @@ func (m *DepartmentMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *DepartmentMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case department.FieldDepartmentID:
-		return m.DepartmentID()
 	case department.FieldDepartmentName:
 		return m.DepartmentName()
 	}
@@ -305,8 +240,6 @@ func (m *DepartmentMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *DepartmentMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case department.FieldDepartmentID:
-		return m.OldDepartmentID(ctx)
 	case department.FieldDepartmentName:
 		return m.OldDepartmentName(ctx)
 	}
@@ -318,13 +251,6 @@ func (m *DepartmentMutation) OldField(ctx context.Context, name string) (ent.Val
 // type mismatch the field type.
 func (m *DepartmentMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case department.FieldDepartmentID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDepartmentID(v)
-		return nil
 	case department.FieldDepartmentName:
 		v, ok := value.(string)
 		if !ok {
@@ -339,21 +265,13 @@ func (m *DepartmentMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
 func (m *DepartmentMutation) AddedFields() []string {
-	var fields []string
-	if m.add_DepartmentID != nil {
-		fields = append(fields, department.FieldDepartmentID)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
 func (m *DepartmentMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case department.FieldDepartmentID:
-		return m.AddedDepartmentID()
-	}
 	return nil, false
 }
 
@@ -362,13 +280,6 @@ func (m *DepartmentMutation) AddedField(name string) (ent.Value, bool) {
 // type mismatch the field type.
 func (m *DepartmentMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case department.FieldDepartmentID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddDepartmentID(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Department numeric field %s", name)
 }
@@ -397,9 +308,6 @@ func (m *DepartmentMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *DepartmentMutation) ResetField(name string) error {
 	switch name {
-	case department.FieldDepartmentID:
-		m.ResetDepartmentID()
-		return nil
 	case department.FieldDepartmentName:
 		m.ResetDepartmentName()
 		return nil
@@ -497,10 +405,7 @@ type ExpertiseMutation struct {
 	op                    Op
 	typ                   string
 	id                    *int
-	_ExpertiseID          *int
-	add_ExpertiseID       *int
 	_ExpertiseName        *string
-	_Licenes              *string
 	clearedFields         map[string]struct{}
 	_ExpertiseUser        map[int]struct{}
 	removed_ExpertiseUser map[int]struct{}
@@ -587,63 +492,6 @@ func (m *ExpertiseMutation) ID() (id int, exists bool) {
 	return *m.id, true
 }
 
-// SetExpertiseID sets the ExpertiseID field.
-func (m *ExpertiseMutation) SetExpertiseID(i int) {
-	m._ExpertiseID = &i
-	m.add_ExpertiseID = nil
-}
-
-// ExpertiseID returns the ExpertiseID value in the mutation.
-func (m *ExpertiseMutation) ExpertiseID() (r int, exists bool) {
-	v := m._ExpertiseID
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldExpertiseID returns the old ExpertiseID value of the Expertise.
-// If the Expertise object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ExpertiseMutation) OldExpertiseID(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldExpertiseID is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldExpertiseID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldExpertiseID: %w", err)
-	}
-	return oldValue.ExpertiseID, nil
-}
-
-// AddExpertiseID adds i to ExpertiseID.
-func (m *ExpertiseMutation) AddExpertiseID(i int) {
-	if m.add_ExpertiseID != nil {
-		*m.add_ExpertiseID += i
-	} else {
-		m.add_ExpertiseID = &i
-	}
-}
-
-// AddedExpertiseID returns the value that was added to the ExpertiseID field in this mutation.
-func (m *ExpertiseMutation) AddedExpertiseID() (r int, exists bool) {
-	v := m.add_ExpertiseID
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetExpertiseID reset all changes of the "ExpertiseID" field.
-func (m *ExpertiseMutation) ResetExpertiseID() {
-	m._ExpertiseID = nil
-	m.add_ExpertiseID = nil
-}
-
 // SetExpertiseName sets the ExpertiseName field.
 func (m *ExpertiseMutation) SetExpertiseName(s string) {
 	m._ExpertiseName = &s
@@ -679,43 +527,6 @@ func (m *ExpertiseMutation) OldExpertiseName(ctx context.Context) (v string, err
 // ResetExpertiseName reset all changes of the "ExpertiseName" field.
 func (m *ExpertiseMutation) ResetExpertiseName() {
 	m._ExpertiseName = nil
-}
-
-// SetLicenes sets the Licenes field.
-func (m *ExpertiseMutation) SetLicenes(s string) {
-	m._Licenes = &s
-}
-
-// Licenes returns the Licenes value in the mutation.
-func (m *ExpertiseMutation) Licenes() (r string, exists bool) {
-	v := m._Licenes
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldLicenes returns the old Licenes value of the Expertise.
-// If the Expertise object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *ExpertiseMutation) OldLicenes(ctx context.Context) (v string, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldLicenes is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldLicenes requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldLicenes: %w", err)
-	}
-	return oldValue.Licenes, nil
-}
-
-// ResetLicenes reset all changes of the "Licenes" field.
-func (m *ExpertiseMutation) ResetLicenes() {
-	m._Licenes = nil
 }
 
 // AddExpertiseUserIDs adds the ExpertiseUser edge to User by ids.
@@ -774,15 +585,9 @@ func (m *ExpertiseMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *ExpertiseMutation) Fields() []string {
-	fields := make([]string, 0, 3)
-	if m._ExpertiseID != nil {
-		fields = append(fields, expertise.FieldExpertiseID)
-	}
+	fields := make([]string, 0, 1)
 	if m._ExpertiseName != nil {
 		fields = append(fields, expertise.FieldExpertiseName)
-	}
-	if m._Licenes != nil {
-		fields = append(fields, expertise.FieldLicenes)
 	}
 	return fields
 }
@@ -792,12 +597,8 @@ func (m *ExpertiseMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *ExpertiseMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case expertise.FieldExpertiseID:
-		return m.ExpertiseID()
 	case expertise.FieldExpertiseName:
 		return m.ExpertiseName()
-	case expertise.FieldLicenes:
-		return m.Licenes()
 	}
 	return nil, false
 }
@@ -807,12 +608,8 @@ func (m *ExpertiseMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *ExpertiseMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case expertise.FieldExpertiseID:
-		return m.OldExpertiseID(ctx)
 	case expertise.FieldExpertiseName:
 		return m.OldExpertiseName(ctx)
-	case expertise.FieldLicenes:
-		return m.OldLicenes(ctx)
 	}
 	return nil, fmt.Errorf("unknown Expertise field %s", name)
 }
@@ -822,26 +619,12 @@ func (m *ExpertiseMutation) OldField(ctx context.Context, name string) (ent.Valu
 // type mismatch the field type.
 func (m *ExpertiseMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case expertise.FieldExpertiseID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetExpertiseID(v)
-		return nil
 	case expertise.FieldExpertiseName:
 		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
 		m.SetExpertiseName(v)
-		return nil
-	case expertise.FieldLicenes:
-		v, ok := value.(string)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetLicenes(v)
 		return nil
 	}
 	return fmt.Errorf("unknown Expertise field %s", name)
@@ -850,21 +633,13 @@ func (m *ExpertiseMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
 func (m *ExpertiseMutation) AddedFields() []string {
-	var fields []string
-	if m.add_ExpertiseID != nil {
-		fields = append(fields, expertise.FieldExpertiseID)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
 func (m *ExpertiseMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case expertise.FieldExpertiseID:
-		return m.AddedExpertiseID()
-	}
 	return nil, false
 }
 
@@ -873,13 +648,6 @@ func (m *ExpertiseMutation) AddedField(name string) (ent.Value, bool) {
 // type mismatch the field type.
 func (m *ExpertiseMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case expertise.FieldExpertiseID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddExpertiseID(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Expertise numeric field %s", name)
 }
@@ -908,14 +676,8 @@ func (m *ExpertiseMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *ExpertiseMutation) ResetField(name string) error {
 	switch name {
-	case expertise.FieldExpertiseID:
-		m.ResetExpertiseID()
-		return nil
 	case expertise.FieldExpertiseName:
 		m.ResetExpertiseName()
-		return nil
-	case expertise.FieldLicenes:
-		m.ResetLicenes()
 		return nil
 	}
 	return fmt.Errorf("unknown Expertise field %s", name)
@@ -1011,8 +773,6 @@ type PositionMutation struct {
 	op                   Op
 	typ                  string
 	id                   *int
-	_PositionID          *int
-	add_PositionID       *int
 	_PositionName        *string
 	clearedFields        map[string]struct{}
 	_PositionUser        map[int]struct{}
@@ -1098,63 +858,6 @@ func (m *PositionMutation) ID() (id int, exists bool) {
 		return
 	}
 	return *m.id, true
-}
-
-// SetPositionID sets the PositionID field.
-func (m *PositionMutation) SetPositionID(i int) {
-	m._PositionID = &i
-	m.add_PositionID = nil
-}
-
-// PositionID returns the PositionID value in the mutation.
-func (m *PositionMutation) PositionID() (r int, exists bool) {
-	v := m._PositionID
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldPositionID returns the old PositionID value of the Position.
-// If the Position object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *PositionMutation) OldPositionID(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldPositionID is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldPositionID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPositionID: %w", err)
-	}
-	return oldValue.PositionID, nil
-}
-
-// AddPositionID adds i to PositionID.
-func (m *PositionMutation) AddPositionID(i int) {
-	if m.add_PositionID != nil {
-		*m.add_PositionID += i
-	} else {
-		m.add_PositionID = &i
-	}
-}
-
-// AddedPositionID returns the value that was added to the PositionID field in this mutation.
-func (m *PositionMutation) AddedPositionID() (r int, exists bool) {
-	v := m.add_PositionID
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetPositionID reset all changes of the "PositionID" field.
-func (m *PositionMutation) ResetPositionID() {
-	m._PositionID = nil
-	m.add_PositionID = nil
 }
 
 // SetPositionName sets the PositionName field.
@@ -1250,10 +953,7 @@ func (m *PositionMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *PositionMutation) Fields() []string {
-	fields := make([]string, 0, 2)
-	if m._PositionID != nil {
-		fields = append(fields, position.FieldPositionID)
-	}
+	fields := make([]string, 0, 1)
 	if m._PositionName != nil {
 		fields = append(fields, position.FieldPositionName)
 	}
@@ -1265,8 +965,6 @@ func (m *PositionMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *PositionMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case position.FieldPositionID:
-		return m.PositionID()
 	case position.FieldPositionName:
 		return m.PositionName()
 	}
@@ -1278,8 +976,6 @@ func (m *PositionMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *PositionMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case position.FieldPositionID:
-		return m.OldPositionID(ctx)
 	case position.FieldPositionName:
 		return m.OldPositionName(ctx)
 	}
@@ -1291,13 +987,6 @@ func (m *PositionMutation) OldField(ctx context.Context, name string) (ent.Value
 // type mismatch the field type.
 func (m *PositionMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case position.FieldPositionID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetPositionID(v)
-		return nil
 	case position.FieldPositionName:
 		v, ok := value.(string)
 		if !ok {
@@ -1312,21 +1001,13 @@ func (m *PositionMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
 func (m *PositionMutation) AddedFields() []string {
-	var fields []string
-	if m.add_PositionID != nil {
-		fields = append(fields, position.FieldPositionID)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
 func (m *PositionMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case position.FieldPositionID:
-		return m.AddedPositionID()
-	}
 	return nil, false
 }
 
@@ -1335,13 +1016,6 @@ func (m *PositionMutation) AddedField(name string) (ent.Value, bool) {
 // type mismatch the field type.
 func (m *PositionMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case position.FieldPositionID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddPositionID(v)
-		return nil
 	}
 	return fmt.Errorf("unknown Position numeric field %s", name)
 }
@@ -1370,9 +1044,6 @@ func (m *PositionMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *PositionMutation) ResetField(name string) error {
 	switch name {
-	case position.FieldPositionID:
-		m.ResetPositionID()
-		return nil
 	case position.FieldPositionName:
 		m.ResetPositionName()
 		return nil
@@ -1470,11 +1141,8 @@ type UserMutation struct {
 	op                     Op
 	typ                    string
 	id                     *int
-	_DoctorID              *int
-	add_DoctorID           *int
 	_DoctorName            *string
-	_DoctorEmail		   *string
-	_Date                  *time.Time
+	_DoctorEmail           *string
 	clearedFields          map[string]struct{}
 	_UserDepartment        *int
 	cleared_UserDepartment bool
@@ -1565,63 +1233,6 @@ func (m *UserMutation) ID() (id int, exists bool) {
 	return *m.id, true
 }
 
-// SetDoctorID sets the DoctorID field.
-func (m *UserMutation) SetDoctorID(i int) {
-	m._DoctorID = &i
-	m.add_DoctorID = nil
-}
-
-// DoctorID returns the DoctorID value in the mutation.
-func (m *UserMutation) DoctorID() (r int, exists bool) {
-	v := m._DoctorID
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDoctorID returns the old DoctorID value of the User.
-// If the User object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *UserMutation) OldDoctorID(ctx context.Context) (v int, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldDoctorID is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldDoctorID requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDoctorID: %w", err)
-	}
-	return oldValue.DoctorID, nil
-}
-
-// AddDoctorID adds i to DoctorID.
-func (m *UserMutation) AddDoctorID(i int) {
-	if m.add_DoctorID != nil {
-		*m.add_DoctorID += i
-	} else {
-		m.add_DoctorID = &i
-	}
-}
-
-// AddedDoctorID returns the value that was added to the DoctorID field in this mutation.
-func (m *UserMutation) AddedDoctorID() (r int, exists bool) {
-	v := m.add_DoctorID
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// ResetDoctorID reset all changes of the "DoctorID" field.
-func (m *UserMutation) ResetDoctorID() {
-	m._DoctorID = nil
-	m.add_DoctorID = nil
-}
-
 // SetDoctorName sets the DoctorName field.
 func (m *UserMutation) SetDoctorName(s string) {
 	m._DoctorName = &s
@@ -1658,6 +1269,7 @@ func (m *UserMutation) OldDoctorName(ctx context.Context) (v string, err error) 
 func (m *UserMutation) ResetDoctorName() {
 	m._DoctorName = nil
 }
+
 // SetDoctorEmail sets the DoctorEmail field.
 func (m *UserMutation) SetDoctorEmail(s string) {
 	m._DoctorEmail = &s
@@ -1693,42 +1305,6 @@ func (m *UserMutation) OldDoctorEmail(ctx context.Context) (v string, err error)
 // ResetDoctorEmail reset all changes of the "DoctorEmail" field.
 func (m *UserMutation) ResetDoctorEmail() {
 	m._DoctorEmail = nil
-}
-// SetDate sets the Date field.
-func (m *UserMutation) SetDate(t time.Time) {
-	m._Date = &t
-}
-
-// Date returns the Date value in the mutation.
-func (m *UserMutation) Date() (r time.Time, exists bool) {
-	v := m._Date
-	if v == nil {
-		return
-	}
-	return *v, true
-}
-
-// OldDate returns the old Date value of the User.
-// If the User object wasn't provided to the builder, the object is fetched
-// from the database.
-// An error is returned if the mutation operation is not UpdateOne, or database query fails.
-func (m *UserMutation) OldDate(ctx context.Context) (v time.Time, err error) {
-	if !m.op.Is(OpUpdateOne) {
-		return v, fmt.Errorf("OldDate is allowed only on UpdateOne operations")
-	}
-	if m.id == nil || m.oldValue == nil {
-		return v, fmt.Errorf("OldDate requires an ID field in the mutation")
-	}
-	oldValue, err := m.oldValue(ctx)
-	if err != nil {
-		return v, fmt.Errorf("querying old value for OldDate: %w", err)
-	}
-	return oldValue.Date, nil
-}
-
-// ResetDate reset all changes of the "Date" field.
-func (m *UserMutation) ResetDate() {
-	m._Date = nil
 }
 
 // SetUserDepartmentID sets the UserDepartment edge to Department by id.
@@ -1862,15 +1438,12 @@ func (m *UserMutation) Type() string {
 // this mutation. Note that, in order to get all numeric
 // fields that were in/decremented, call AddedFields().
 func (m *UserMutation) Fields() []string {
-	fields := make([]string, 0, 3)
-	if m._DoctorID != nil {
-		fields = append(fields, user.FieldDoctorID)
+	fields := make([]string, 0, 2)
+	if m._DoctorName != nil {
+		fields = append(fields, user.FieldDoctorName)
 	}
 	if m._DoctorEmail != nil {
 		fields = append(fields, user.FieldDoctorEmail)
-	}
-	if m._Date != nil {
-		fields = append(fields, user.FieldDate)
 	}
 	return fields
 }
@@ -1880,12 +1453,10 @@ func (m *UserMutation) Fields() []string {
 // not set, or was not define in the schema.
 func (m *UserMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case user.FieldDoctorID:
-		return m.DoctorID()
+	case user.FieldDoctorName:
+		return m.DoctorName()
 	case user.FieldDoctorEmail:
 		return m.DoctorEmail()
-	case user.FieldDate:
-		return m.Date()
 	}
 	return nil, false
 }
@@ -1895,12 +1466,10 @@ func (m *UserMutation) Field(name string) (ent.Value, bool) {
 // or the query to the database was failed.
 func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case user.FieldDoctorID:
-		return m.OldDoctorID(ctx)
+	case user.FieldDoctorName:
+		return m.OldDoctorName(ctx)
 	case user.FieldDoctorEmail:
 		return m.OldDoctorEmail(ctx)
-	case user.FieldDate:
-		return m.OldDate(ctx)
 	}
 	return nil, fmt.Errorf("unknown User field %s", name)
 }
@@ -1910,12 +1479,12 @@ func (m *UserMutation) OldField(ctx context.Context, name string) (ent.Value, er
 // type mismatch the field type.
 func (m *UserMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case user.FieldDoctorID:
-		v, ok := value.(int)
+	case user.FieldDoctorName:
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetDoctorID(v)
+		m.SetDoctorName(v)
 		return nil
 	case user.FieldDoctorEmail:
 		v, ok := value.(string)
@@ -1924,13 +1493,6 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 		}
 		m.SetDoctorEmail(v)
 		return nil
-	case user.FieldDate:
-		v, ok := value.(time.Time)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.SetDate(v)
-		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)
 }
@@ -1938,21 +1500,13 @@ func (m *UserMutation) SetField(name string, value ent.Value) error {
 // AddedFields returns all numeric fields that were incremented
 // or decremented during this mutation.
 func (m *UserMutation) AddedFields() []string {
-	var fields []string
-	if m.add_DoctorID != nil {
-		fields = append(fields, user.FieldDoctorID)
-	}
-	return fields
+	return nil
 }
 
 // AddedField returns the numeric value that was in/decremented
 // from a field with the given name. The second value indicates
 // that this field was not set, or was not define in the schema.
 func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
-	switch name {
-	case user.FieldDoctorID:
-		return m.AddedDoctorID()
-	}
 	return nil, false
 }
 
@@ -1961,13 +1515,6 @@ func (m *UserMutation) AddedField(name string) (ent.Value, bool) {
 // type mismatch the field type.
 func (m *UserMutation) AddField(name string, value ent.Value) error {
 	switch name {
-	case user.FieldDoctorID:
-		v, ok := value.(int)
-		if !ok {
-			return fmt.Errorf("unexpected type %T for field %s", value, name)
-		}
-		m.AddDoctorID(v)
-		return nil
 	}
 	return fmt.Errorf("unknown User numeric field %s", name)
 }
@@ -1996,17 +1543,11 @@ func (m *UserMutation) ClearField(name string) error {
 // defined in the schema.
 func (m *UserMutation) ResetField(name string) error {
 	switch name {
-	case user.FieldDoctorID:
-		m.ResetDoctorID()
-		return nil
 	case user.FieldDoctorName:
 		m.ResetDoctorName()
 		return nil
 	case user.FieldDoctorEmail:
 		m.ResetDoctorEmail()
-		return nil
-	case user.FieldDate:
-		m.ResetDate()
 		return nil
 	}
 	return fmt.Errorf("unknown User field %s", name)

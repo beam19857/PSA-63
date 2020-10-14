@@ -7,8 +7,6 @@ const (
 	Label = "department"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldDepartmentID holds the string denoting the departmentid field in the database.
-	FieldDepartmentID = "department_id"
 	// FieldDepartmentName holds the string denoting the departmentname field in the database.
 	FieldDepartmentName = "department_name"
 
@@ -23,12 +21,11 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	DepartmentUserInverseTable = "users"
 	// DepartmentUserColumn is the table column denoting the DepartmentUser relation/edge.
-	DepartmentUserColumn = "department_department_user"
+	DepartmentUserColumn = "DepartmentID"
 )
 
 // Columns holds all SQL columns for department fields.
 var Columns = []string{
 	FieldID,
-	FieldDepartmentID,
 	FieldDepartmentName,
 }

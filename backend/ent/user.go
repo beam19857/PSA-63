@@ -5,13 +5,12 @@ package ent
 import (
 	"fmt"
 	"strings"
-	"time"
 
 	"github.com/beam19857/app/ent/department"
 	"github.com/beam19857/app/ent/expertise"
 	"github.com/beam19857/app/ent/position"
 	"github.com/beam19857/app/ent/user"
-	"github.com/facebook/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql"
 )
 
 // User is the model entity for the User schema.
@@ -19,20 +18,16 @@ type User struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// DoctorID holds the value of the "DoctorID" field.
-	DoctorID int `json:"DoctorID,omitempty"`
 	// DoctorName holds the value of the "DoctorName" field.
 	DoctorName string `json:"DoctorName,omitempty"`
 	// DoctorEmail holds the value of the "DoctorEmail" field.
 	DoctorEmail string `json:"DoctorEmail,omitempty"`
-	// Date holds the value of the "Date" field.
-	Date time.Time `json:"Date,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
 	// The values are being populated by the UserQuery when eager-loading is set.
-	Edges                      UserEdges `json:"edges"`
-	department_department_user *int
-	expertise_expertise_user   *int
-	position_position_user     *int
+	Edges        UserEdges `json:"edges"`
+	DepartmentID *int
+	ExpertiseID  *int
+	PositionID   *int
 }
 
 // UserEdges holds the relations/edges for other nodes in the graph.
@@ -94,19 +89,17 @@ func (e UserEdges) UserPositionOrErr() (*Position, error) {
 func (*User) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullInt64{},  // DoctorID
 		&sql.NullString{}, // DoctorName
-		&sql.NullString{}, //DoctorEmail
-		&sql.NullTime{},   // Date
+		&sql.NullString{}, // DoctorEmail
 	}
 }
 
 // fkValues returns the types for scanning foreign-keys values from sql.Rows.
 func (*User) fkValues() []interface{} {
 	return []interface{}{
-		&sql.NullInt64{}, // department_department_user
-		&sql.NullInt64{}, // expertise_expertise_user
-		&sql.NullInt64{}, // position_position_user
+		&sql.NullInt64{}, // DepartmentID
+		&sql.NullInt64{}, // ExpertiseID
+		&sql.NullInt64{}, // PositionID
 	}
 }
 
@@ -122,13 +115,8 @@ func (u *User) assignValues(values ...interface{}) error {
 	}
 	u.ID = int(value.Int64)
 	values = values[1:]
-	if value, ok := values[0].(*sql.NullInt64); !ok {
-		return fmt.Errorf("unexpected type %T for field DoctorID", values[0])
-	} else if value.Valid {
-		u.DoctorID = int(value.Int64)
-	}
-	if value, ok := values[1].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field DoctorName", values[1])
+	if value, ok := values[0].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field DoctorName", values[0])
 	} else if value.Valid {
 		u.DoctorName = value.String
 	}
@@ -137,30 +125,25 @@ func (u *User) assignValues(values ...interface{}) error {
 	} else if value.Valid {
 		u.DoctorEmail = value.String
 	}
-	if value, ok := values[2].(*sql.NullTime); !ok {
-		return fmt.Errorf("unexpected type %T for field Date", values[2])
-	} else if value.Valid {
-		u.Date = value.Time
-	}
-	values = values[3:]
+	values = values[2:]
 	if len(values) == len(user.ForeignKeys) {
 		if value, ok := values[0].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field department_department_user", value)
+			return fmt.Errorf("unexpected type %T for edge-field DepartmentID", value)
 		} else if value.Valid {
-			u.department_department_user = new(int)
-			*u.department_department_user = int(value.Int64)
+			u.DepartmentID = new(int)
+			*u.DepartmentID = int(value.Int64)
 		}
 		if value, ok := values[1].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field expertise_expertise_user", value)
+			return fmt.Errorf("unexpected type %T for edge-field ExpertiseID", value)
 		} else if value.Valid {
-			u.expertise_expertise_user = new(int)
-			*u.expertise_expertise_user = int(value.Int64)
+			u.ExpertiseID = new(int)
+			*u.ExpertiseID = int(value.Int64)
 		}
 		if value, ok := values[2].(*sql.NullInt64); !ok {
-			return fmt.Errorf("unexpected type %T for edge-field position_position_user", value)
+			return fmt.Errorf("unexpected type %T for edge-field PositionID", value)
 		} else if value.Valid {
-			u.position_position_user = new(int)
-			*u.position_position_user = int(value.Int64)
+			u.PositionID = new(int)
+			*u.PositionID = int(value.Int64)
 		}
 	}
 	return nil
@@ -204,14 +187,10 @@ func (u *User) String() string {
 	var builder strings.Builder
 	builder.WriteString("User(")
 	builder.WriteString(fmt.Sprintf("id=%v", u.ID))
-	builder.WriteString(", DoctorID=")
-	builder.WriteString(fmt.Sprintf("%v", u.DoctorID))
 	builder.WriteString(", DoctorName=")
 	builder.WriteString(u.DoctorName)
 	builder.WriteString(", DoctorEmail=")
 	builder.WriteString(u.DoctorEmail)
-	builder.WriteString(", Date=")
-	builder.WriteString(u.Date.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

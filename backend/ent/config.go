@@ -3,8 +3,8 @@
 package ent
 
 import (
-	"github.com/facebook/ent"
-	"github.com/facebook/ent/dialect"
+	"github.com/facebookincubator/ent"
+	"github.com/facebookincubator/ent/dialect"
 )
 
 // Option function to configure the client.

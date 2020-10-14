@@ -7,12 +7,8 @@ const (
 	Label = "expertise"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldExpertiseID holds the string denoting the expertiseid field in the database.
-	FieldExpertiseID = "expertise_id"
 	// FieldExpertiseName holds the string denoting the expertisename field in the database.
 	FieldExpertiseName = "expertise_name"
-	// FieldLicenes holds the string denoting the licenes field in the database.
-	FieldLicenes = "licenes"
 
 	// EdgeExpertiseUser holds the string denoting the expertiseuser edge name in mutations.
 	EdgeExpertiseUser = "ExpertiseUser"
@@ -25,13 +21,11 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	ExpertiseUserInverseTable = "users"
 	// ExpertiseUserColumn is the table column denoting the ExpertiseUser relation/edge.
-	ExpertiseUserColumn = "expertise_expertise_user"
+	ExpertiseUserColumn = "ExpertiseID"
 )
 
 // Columns holds all SQL columns for expertise fields.
 var Columns = []string{
 	FieldID,
-	FieldExpertiseID,
 	FieldExpertiseName,
-	FieldLicenes,
 }

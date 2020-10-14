@@ -9,8 +9,8 @@ import (
 
 	"github.com/beam19857/app/ent/expertise"
 	"github.com/beam19857/app/ent/user"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
-	"github.com/facebook/ent/schema/field"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // ExpertiseCreate is the builder for creating a Expertise entity.
@@ -20,21 +20,9 @@ type ExpertiseCreate struct {
 	hooks    []Hook
 }
 
-// SetExpertiseID sets the ExpertiseID field.
-func (ec *ExpertiseCreate) SetExpertiseID(i int) *ExpertiseCreate {
-	ec.mutation.SetExpertiseID(i)
-	return ec
-}
-
 // SetExpertiseName sets the ExpertiseName field.
 func (ec *ExpertiseCreate) SetExpertiseName(s string) *ExpertiseCreate {
 	ec.mutation.SetExpertiseName(s)
-	return ec
-}
-
-// SetLicenes sets the Licenes field.
-func (ec *ExpertiseCreate) SetLicenes(s string) *ExpertiseCreate {
-	ec.mutation.SetLicenes(s)
 	return ec
 }
 
@@ -60,8 +48,8 @@ func (ec *ExpertiseCreate) Mutation() *ExpertiseMutation {
 
 // Save creates the Expertise in the database.
 func (ec *ExpertiseCreate) Save(ctx context.Context) (*Expertise, error) {
-	if err := ec.preSave(); err != nil {
-		return nil, err
+	if _, ok := ec.mutation.ExpertiseName(); !ok {
+		return nil, &ValidationError{Name: "ExpertiseName", err: errors.New("ent: missing required field \"ExpertiseName\"")}
 	}
 	var (
 		err  error
@@ -99,19 +87,6 @@ func (ec *ExpertiseCreate) SaveX(ctx context.Context) *Expertise {
 	return v
 }
 
-func (ec *ExpertiseCreate) preSave() error {
-	if _, ok := ec.mutation.ExpertiseID(); !ok {
-		return &ValidationError{Name: "ExpertiseID", err: errors.New("ent: missing required field \"ExpertiseID\"")}
-	}
-	if _, ok := ec.mutation.ExpertiseName(); !ok {
-		return &ValidationError{Name: "ExpertiseName", err: errors.New("ent: missing required field \"ExpertiseName\"")}
-	}
-	if _, ok := ec.mutation.Licenes(); !ok {
-		return &ValidationError{Name: "Licenes", err: errors.New("ent: missing required field \"Licenes\"")}
-	}
-	return nil
-}
-
 func (ec *ExpertiseCreate) sqlSave(ctx context.Context) (*Expertise, error) {
 	e, _spec := ec.createSpec()
 	if err := sqlgraph.CreateNode(ctx, ec.driver, _spec); err != nil {
@@ -136,14 +111,6 @@ func (ec *ExpertiseCreate) createSpec() (*Expertise, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := ec.mutation.ExpertiseID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: expertise.FieldExpertiseID,
-		})
-		e.ExpertiseID = value
-	}
 	if value, ok := ec.mutation.ExpertiseName(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -151,14 +118,6 @@ func (ec *ExpertiseCreate) createSpec() (*Expertise, *sqlgraph.CreateSpec) {
 			Column: expertise.FieldExpertiseName,
 		})
 		e.ExpertiseName = value
-	}
-	if value, ok := ec.mutation.Licenes(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: expertise.FieldLicenes,
-		})
-		e.Licenes = value
 	}
 	if nodes := ec.mutation.ExpertiseUserIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -180,70 +139,4 @@ func (ec *ExpertiseCreate) createSpec() (*Expertise, *sqlgraph.CreateSpec) {
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return e, _spec
-}
-
-// ExpertiseCreateBulk is the builder for creating a bulk of Expertise entities.
-type ExpertiseCreateBulk struct {
-	config
-	builders []*ExpertiseCreate
-}
-
-// Save creates the Expertise entities in the database.
-func (ecb *ExpertiseCreateBulk) Save(ctx context.Context) ([]*Expertise, error) {
-	specs := make([]*sqlgraph.CreateSpec, len(ecb.builders))
-	nodes := make([]*Expertise, len(ecb.builders))
-	mutators := make([]Mutator, len(ecb.builders))
-	for i := range ecb.builders {
-		func(i int, root context.Context) {
-			builder := ecb.builders[i]
-			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-				if err := builder.preSave(); err != nil {
-					return nil, err
-				}
-				mutation, ok := m.(*ExpertiseMutation)
-				if !ok {
-					return nil, fmt.Errorf("unexpected mutation type %T", m)
-				}
-				builder.mutation = mutation
-				nodes[i], specs[i] = builder.createSpec()
-				var err error
-				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, ecb.builders[i+1].mutation)
-				} else {
-					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, ecb.driver, &sqlgraph.BatchCreateSpec{Nodes: specs}); err != nil {
-						if cerr, ok := isSQLConstraintError(err); ok {
-							err = cerr
-						}
-					}
-				}
-				mutation.done = true
-				if err != nil {
-					return nil, err
-				}
-				id := specs[i].ID.Value.(int64)
-				nodes[i].ID = int(id)
-				return nodes[i], nil
-			})
-			for i := len(builder.hooks) - 1; i >= 0; i-- {
-				mut = builder.hooks[i](mut)
-			}
-			mutators[i] = mut
-		}(i, ctx)
-	}
-	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, ecb.builders[0].mutation); err != nil {
-			return nil, err
-		}
-	}
-	return nodes, nil
-}
-
-// SaveX calls Save and panics if Save returns an error.
-func (ecb *ExpertiseCreateBulk) SaveX(ctx context.Context) []*Expertise {
-	v, err := ecb.Save(ctx)
-	if err != nil {
-		panic(err)
-	}
-	return v
 }

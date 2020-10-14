@@ -9,8 +9,8 @@ import (
 
 	"github.com/beam19857/app/ent/position"
 	"github.com/beam19857/app/ent/user"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
-	"github.com/facebook/ent/schema/field"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // PositionCreate is the builder for creating a Position entity.
@@ -18,12 +18,6 @@ type PositionCreate struct {
 	config
 	mutation *PositionMutation
 	hooks    []Hook
-}
-
-// SetPositionID sets the PositionID field.
-func (pc *PositionCreate) SetPositionID(i int) *PositionCreate {
-	pc.mutation.SetPositionID(i)
-	return pc
 }
 
 // SetPositionName sets the PositionName field.
@@ -54,8 +48,8 @@ func (pc *PositionCreate) Mutation() *PositionMutation {
 
 // Save creates the Position in the database.
 func (pc *PositionCreate) Save(ctx context.Context) (*Position, error) {
-	if err := pc.preSave(); err != nil {
-		return nil, err
+	if _, ok := pc.mutation.PositionName(); !ok {
+		return nil, &ValidationError{Name: "PositionName", err: errors.New("ent: missing required field \"PositionName\"")}
 	}
 	var (
 		err  error
@@ -93,16 +87,6 @@ func (pc *PositionCreate) SaveX(ctx context.Context) *Position {
 	return v
 }
 
-func (pc *PositionCreate) preSave() error {
-	if _, ok := pc.mutation.PositionID(); !ok {
-		return &ValidationError{Name: "PositionID", err: errors.New("ent: missing required field \"PositionID\"")}
-	}
-	if _, ok := pc.mutation.PositionName(); !ok {
-		return &ValidationError{Name: "PositionName", err: errors.New("ent: missing required field \"PositionName\"")}
-	}
-	return nil
-}
-
 func (pc *PositionCreate) sqlSave(ctx context.Context) (*Position, error) {
 	po, _spec := pc.createSpec()
 	if err := sqlgraph.CreateNode(ctx, pc.driver, _spec); err != nil {
@@ -127,14 +111,6 @@ func (pc *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := pc.mutation.PositionID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: position.FieldPositionID,
-		})
-		po.PositionID = value
-	}
 	if value, ok := pc.mutation.PositionName(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -163,70 +139,4 @@ func (pc *PositionCreate) createSpec() (*Position, *sqlgraph.CreateSpec) {
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return po, _spec
-}
-
-// PositionCreateBulk is the builder for creating a bulk of Position entities.
-type PositionCreateBulk struct {
-	config
-	builders []*PositionCreate
-}
-
-// Save creates the Position entities in the database.
-func (pcb *PositionCreateBulk) Save(ctx context.Context) ([]*Position, error) {
-	specs := make([]*sqlgraph.CreateSpec, len(pcb.builders))
-	nodes := make([]*Position, len(pcb.builders))
-	mutators := make([]Mutator, len(pcb.builders))
-	for i := range pcb.builders {
-		func(i int, root context.Context) {
-			builder := pcb.builders[i]
-			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-				if err := builder.preSave(); err != nil {
-					return nil, err
-				}
-				mutation, ok := m.(*PositionMutation)
-				if !ok {
-					return nil, fmt.Errorf("unexpected mutation type %T", m)
-				}
-				builder.mutation = mutation
-				nodes[i], specs[i] = builder.createSpec()
-				var err error
-				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, pcb.builders[i+1].mutation)
-				} else {
-					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, pcb.driver, &sqlgraph.BatchCreateSpec{Nodes: specs}); err != nil {
-						if cerr, ok := isSQLConstraintError(err); ok {
-							err = cerr
-						}
-					}
-				}
-				mutation.done = true
-				if err != nil {
-					return nil, err
-				}
-				id := specs[i].ID.Value.(int64)
-				nodes[i].ID = int(id)
-				return nodes[i], nil
-			})
-			for i := len(builder.hooks) - 1; i >= 0; i-- {
-				mut = builder.hooks[i](mut)
-			}
-			mutators[i] = mut
-		}(i, ctx)
-	}
-	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, pcb.builders[0].mutation); err != nil {
-			return nil, err
-		}
-	}
-	return nodes, nil
-}
-
-// SaveX calls Save and panics if Save returns an error.
-func (pcb *PositionCreateBulk) SaveX(ctx context.Context) []*Position {
-	v, err := pcb.Save(ctx)
-	if err != nil {
-		panic(err)
-	}
-	return v
 }

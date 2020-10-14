@@ -3,7 +3,7 @@
 package predicate
 
 import (
-	"github.com/facebook/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql"
 )
 
 // Department is the predicate function for department builders.

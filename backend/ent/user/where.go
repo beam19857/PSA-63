@@ -3,11 +3,9 @@
 package user
 
 import (
-	"time"
-
 	"github.com/beam19857/app/ent/predicate"
-	"github.com/facebook/ent/dialect/sql"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their identifier.
@@ -93,106 +91,17 @@ func IDLTE(id int) predicate.User {
 	})
 }
 
-// DoctorID applies equality check predicate on the "DoctorID" field. It's identical to DoctorIDEQ.
-func DoctorID(v int) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDoctorID), v))
-	})
-}
-
 // DoctorName applies equality check predicate on the "DoctorName" field. It's identical to DoctorNameEQ.
 func DoctorName(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldDoctorName), v))
 	})
 }
-// DoctorName applies equality check predicate on the "DoctorEmail" field. It's identical to DoctorEmailEQ.
+
+// DoctorEmail applies equality check predicate on the "DoctorEmail" field. It's identical to DoctorEmailEQ.
 func DoctorEmail(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldDoctorEmail), v))
-	})
-}
-
-// Date applies equality check predicate on the "Date" field. It's identical to DateEQ.
-func Date(v time.Time) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDate), v))
-	})
-}
-
-// DoctorIDEQ applies the EQ predicate on the "DoctorID" field.
-func DoctorIDEQ(v int) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDoctorID), v))
-	})
-}
-
-// DoctorIDNEQ applies the NEQ predicate on the "DoctorID" field.
-func DoctorIDNEQ(v int) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDoctorID), v))
-	})
-}
-
-// DoctorIDIn applies the In predicate on the "DoctorID" field.
-func DoctorIDIn(vs ...int) predicate.User {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.User(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldDoctorID), v...))
-	})
-}
-
-// DoctorIDNotIn applies the NotIn predicate on the "DoctorID" field.
-func DoctorIDNotIn(vs ...int) predicate.User {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.User(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldDoctorID), v...))
-	})
-}
-
-// DoctorIDGT applies the GT predicate on the "DoctorID" field.
-func DoctorIDGT(v int) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDoctorID), v))
-	})
-}
-
-// DoctorIDGTE applies the GTE predicate on the "DoctorID" field.
-func DoctorIDGTE(v int) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDoctorID), v))
-	})
-}
-
-// DoctorIDLT applies the LT predicate on the "DoctorID" field.
-func DoctorIDLT(v int) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDoctorID), v))
-	})
-}
-
-// DoctorIDLTE applies the LTE predicate on the "DoctorID" field.
-func DoctorIDLTE(v int) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDoctorID), v))
 	})
 }
 
@@ -306,6 +215,7 @@ func DoctorNameContainsFold(v string) predicate.User {
 		s.Where(sql.ContainsFold(s.C(FieldDoctorName), v))
 	})
 }
+
 // DoctorEmailEQ applies the EQ predicate on the "DoctorEmail" field.
 func DoctorEmailEQ(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
@@ -414,81 +324,6 @@ func DoctorEmailEqualFold(v string) predicate.User {
 func DoctorEmailContainsFold(v string) predicate.User {
 	return predicate.User(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldDoctorEmail), v))
-	})
-}
-// DateEQ applies the EQ predicate on the "Date" field.
-func DateEQ(v time.Time) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldDate), v))
-	})
-}
-
-// DateNEQ applies the NEQ predicate on the "Date" field.
-func DateNEQ(v time.Time) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldDate), v))
-	})
-}
-
-// DateIn applies the In predicate on the "Date" field.
-func DateIn(vs ...time.Time) predicate.User {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.User(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldDate), v...))
-	})
-}
-
-// DateNotIn applies the NotIn predicate on the "Date" field.
-func DateNotIn(vs ...time.Time) predicate.User {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.User(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldDate), v...))
-	})
-}
-
-// DateGT applies the GT predicate on the "Date" field.
-func DateGT(v time.Time) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldDate), v))
-	})
-}
-
-// DateGTE applies the GTE predicate on the "Date" field.
-func DateGTE(v time.Time) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldDate), v))
-	})
-}
-
-// DateLT applies the LT predicate on the "Date" field.
-func DateLT(v time.Time) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldDate), v))
-	})
-}
-
-// DateLTE applies the LTE predicate on the "Date" field.
-func DateLTE(v time.Time) predicate.User {
-	return predicate.User(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldDate), v))
 	})
 }
 

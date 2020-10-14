@@ -9,7 +9,7 @@ import (
 	// required by schema hooks.
 	_ "github.com/beam19857/app/ent/runtime"
 
-	"github.com/facebook/ent/dialect/sql/schema"
+	"github.com/facebookincubator/ent/dialect/sql/schema"
 )
 
 type (

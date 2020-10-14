@@ -1,9 +1,9 @@
 package schema
 
 import (
-    "github.com/facebook/ent"
-    "github.com/facebook/ent/schema/field"
-    "github.com/facebook/ent/schema/edge"
+    "github.com/facebookincubator/ent"
+    "github.com/facebookincubator/ent/schema/field"
+    "github.com/facebookincubator/ent/schema/edge"
 )
 
 
@@ -15,7 +15,6 @@ type Department struct {
 // Fields of the Department.
 func (Department) Fields() []ent.Field {
 	return []ent.Field{
-		field.Int("DepartmentID"),
 		field.String("DepartmentName"),
 	}
 }
@@ -23,6 +22,6 @@ func (Department) Fields() []ent.Field {
 // Edges of the Department.
 func (Department) Edges() []ent.Edge {
 	return []ent.Edge{
-		edge.To("DepartmentUser",User.Type),
+		edge.To("DepartmentUser",User.Type).StorageKey(edge.Column("DepartmentID")),
 	}
 }

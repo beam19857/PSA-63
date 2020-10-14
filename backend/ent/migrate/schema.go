@@ -3,15 +3,14 @@
 package migrate
 
 import (
-	"github.com/facebook/ent/dialect/sql/schema"
-	"github.com/facebook/ent/schema/field"
+	"github.com/facebookincubator/ent/dialect/sql/schema"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 var (
 	// DepartmentsColumns holds the columns for the "departments" table.
 	DepartmentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "department_id", Type: field.TypeInt},
 		{Name: "department_name", Type: field.TypeString},
 	}
 	// DepartmentsTable holds the schema information for the "departments" table.
@@ -24,9 +23,7 @@ var (
 	// ExpertisesColumns holds the columns for the "expertises" table.
 	ExpertisesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "expertise_id", Type: field.TypeInt},
 		{Name: "expertise_name", Type: field.TypeString},
-		{Name: "licenes", Type: field.TypeString},
 	}
 	// ExpertisesTable holds the schema information for the "expertises" table.
 	ExpertisesTable = &schema.Table{
@@ -38,7 +35,6 @@ var (
 	// PositionsColumns holds the columns for the "positions" table.
 	PositionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "position_id", Type: field.TypeInt},
 		{Name: "position_name", Type: field.TypeString},
 	}
 	// PositionsTable holds the schema information for the "positions" table.
@@ -51,12 +47,11 @@ var (
 	// UsersColumns holds the columns for the "users" table.
 	UsersColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "doctor_id", Type: field.TypeInt},
 		{Name: "doctor_name", Type: field.TypeString},
-		{Name: "date", Type: field.TypeTime},
-		{Name: "department_department_user", Type: field.TypeInt, Nullable: true},
-		{Name: "expertise_expertise_user", Type: field.TypeInt, Nullable: true},
-		{Name: "position_position_user", Type: field.TypeInt, Nullable: true},
+		{Name: "doctor_email", Type: field.TypeString},
+		{Name: "DepartmentID", Type: field.TypeInt, Nullable: true},
+		{Name: "ExpertiseID", Type: field.TypeInt, Nullable: true},
+		{Name: "PositionID", Type: field.TypeInt, Nullable: true},
 	}
 	// UsersTable holds the schema information for the "users" table.
 	UsersTable = &schema.Table{
@@ -66,21 +61,21 @@ var (
 		ForeignKeys: []*schema.ForeignKey{
 			{
 				Symbol:  "users_departments_DepartmentUser",
-				Columns: []*schema.Column{UsersColumns[4]},
+				Columns: []*schema.Column{UsersColumns[3]},
 
 				RefColumns: []*schema.Column{DepartmentsColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "users_expertises_ExpertiseUser",
-				Columns: []*schema.Column{UsersColumns[5]},
+				Columns: []*schema.Column{UsersColumns[4]},
 
 				RefColumns: []*schema.Column{ExpertisesColumns[0]},
 				OnDelete:   schema.SetNull,
 			},
 			{
 				Symbol:  "users_positions_PositionUser",
-				Columns: []*schema.Column{UsersColumns[6]},
+				Columns: []*schema.Column{UsersColumns[5]},
 
 				RefColumns: []*schema.Column{PositionsColumns[0]},
 				OnDelete:   schema.SetNull,

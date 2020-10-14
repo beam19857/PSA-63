@@ -12,9 +12,9 @@ import (
 	"github.com/beam19857/app/ent/expertise"
 	"github.com/beam19857/app/ent/predicate"
 	"github.com/beam19857/app/ent/user"
-	"github.com/facebook/ent/dialect/sql"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
-	"github.com/facebook/ent/schema/field"
+	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // ExpertiseQuery is the builder for querying Expertise entities.
@@ -270,12 +270,12 @@ func (eq *ExpertiseQuery) WithExpertiseUser(opts ...func(*UserQuery)) *Expertise
 // Example:
 //
 //	var v []struct {
-//		ExpertiseID int `json:"ExpertiseID,omitempty"`
+//		ExpertiseName string `json:"ExpertiseName,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Expertise.Query().
-//		GroupBy(expertise.FieldExpertiseID).
+//		GroupBy(expertise.FieldExpertiseName).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -296,11 +296,11 @@ func (eq *ExpertiseQuery) GroupBy(field string, fields ...string) *ExpertiseGrou
 // Example:
 //
 //	var v []struct {
-//		ExpertiseID int `json:"ExpertiseID,omitempty"`
+//		ExpertiseName string `json:"ExpertiseName,omitempty"`
 //	}
 //
 //	client.Expertise.Query().
-//		Select(expertise.FieldExpertiseID).
+//		Select(expertise.FieldExpertiseName).
 //		Scan(ctx, &v)
 //
 func (eq *ExpertiseQuery) Select(field string, fields ...string) *ExpertiseSelect {
@@ -371,13 +371,13 @@ func (eq *ExpertiseQuery) sqlAll(ctx context.Context) ([]*Expertise, error) {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.expertise_expertise_user
+			fk := n.ExpertiseID
 			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "expertise_expertise_user" is nil for node %v`, n.ID)
+				return nil, fmt.Errorf(`foreign-key "ExpertiseID" is nil for node %v`, n.ID)
 			}
 			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "expertise_expertise_user" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "ExpertiseID" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.ExpertiseUser = append(node.Edges.ExpertiseUser, n)
 		}

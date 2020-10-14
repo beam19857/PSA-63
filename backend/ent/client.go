@@ -14,9 +14,9 @@ import (
 	"github.com/beam19857/app/ent/position"
 	"github.com/beam19857/app/ent/user"
 
-	"github.com/facebook/ent/dialect"
-	"github.com/facebook/ent/dialect/sql"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/dialect"
+	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 )
 
 // Client is the client that holds all ent builders.
@@ -160,11 +160,6 @@ func (c *DepartmentClient) Create() *DepartmentCreate {
 	return &DepartmentCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// BulkCreate returns a builder for creating a bulk of Department entities.
-func (c *DepartmentClient) CreateBulk(builders ...*DepartmentCreate) *DepartmentCreateBulk {
-	return &DepartmentCreateBulk{config: c.config, builders: builders}
-}
-
 // Update returns an update builder for Department.
 func (c *DepartmentClient) Update() *DepartmentUpdate {
 	mutation := newDepartmentMutation(c.config, OpUpdate)
@@ -202,7 +197,7 @@ func (c *DepartmentClient) DeleteOneID(id int) *DepartmentDeleteOne {
 	return &DepartmentDeleteOne{builder}
 }
 
-// Query returns a query builder for Department.
+// Create returns a query builder for Department.
 func (c *DepartmentClient) Query() *DepartmentQuery {
 	return &DepartmentQuery{config: c.config}
 }
@@ -264,11 +259,6 @@ func (c *ExpertiseClient) Create() *ExpertiseCreate {
 	return &ExpertiseCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// BulkCreate returns a builder for creating a bulk of Expertise entities.
-func (c *ExpertiseClient) CreateBulk(builders ...*ExpertiseCreate) *ExpertiseCreateBulk {
-	return &ExpertiseCreateBulk{config: c.config, builders: builders}
-}
-
 // Update returns an update builder for Expertise.
 func (c *ExpertiseClient) Update() *ExpertiseUpdate {
 	mutation := newExpertiseMutation(c.config, OpUpdate)
@@ -306,7 +296,7 @@ func (c *ExpertiseClient) DeleteOneID(id int) *ExpertiseDeleteOne {
 	return &ExpertiseDeleteOne{builder}
 }
 
-// Query returns a query builder for Expertise.
+// Create returns a query builder for Expertise.
 func (c *ExpertiseClient) Query() *ExpertiseQuery {
 	return &ExpertiseQuery{config: c.config}
 }
@@ -368,11 +358,6 @@ func (c *PositionClient) Create() *PositionCreate {
 	return &PositionCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// BulkCreate returns a builder for creating a bulk of Position entities.
-func (c *PositionClient) CreateBulk(builders ...*PositionCreate) *PositionCreateBulk {
-	return &PositionCreateBulk{config: c.config, builders: builders}
-}
-
 // Update returns an update builder for Position.
 func (c *PositionClient) Update() *PositionUpdate {
 	mutation := newPositionMutation(c.config, OpUpdate)
@@ -410,7 +395,7 @@ func (c *PositionClient) DeleteOneID(id int) *PositionDeleteOne {
 	return &PositionDeleteOne{builder}
 }
 
-// Query returns a query builder for Position.
+// Create returns a query builder for Position.
 func (c *PositionClient) Query() *PositionQuery {
 	return &PositionQuery{config: c.config}
 }
@@ -472,11 +457,6 @@ func (c *UserClient) Create() *UserCreate {
 	return &UserCreate{config: c.config, hooks: c.Hooks(), mutation: mutation}
 }
 
-// BulkCreate returns a builder for creating a bulk of User entities.
-func (c *UserClient) CreateBulk(builders ...*UserCreate) *UserCreateBulk {
-	return &UserCreateBulk{config: c.config, builders: builders}
-}
-
 // Update returns an update builder for User.
 func (c *UserClient) Update() *UserUpdate {
 	mutation := newUserMutation(c.config, OpUpdate)
@@ -514,7 +494,7 @@ func (c *UserClient) DeleteOneID(id int) *UserDeleteOne {
 	return &UserDeleteOne{builder}
 }
 
-// Query returns a query builder for User.
+// Create returns a query builder for User.
 func (c *UserClient) Query() *UserQuery {
 	return &UserQuery{config: c.config}
 }

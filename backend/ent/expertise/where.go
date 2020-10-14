@@ -4,8 +4,8 @@ package expertise
 
 import (
 	"github.com/beam19857/app/ent/predicate"
-	"github.com/facebook/ent/dialect/sql"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their identifier.
@@ -91,100 +91,10 @@ func IDLTE(id int) predicate.Expertise {
 	})
 }
 
-// ExpertiseID applies equality check predicate on the "ExpertiseID" field. It's identical to ExpertiseIDEQ.
-func ExpertiseID(v int) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldExpertiseID), v))
-	})
-}
-
 // ExpertiseName applies equality check predicate on the "ExpertiseName" field. It's identical to ExpertiseNameEQ.
 func ExpertiseName(v string) predicate.Expertise {
 	return predicate.Expertise(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldExpertiseName), v))
-	})
-}
-
-// Licenes applies equality check predicate on the "Licenes" field. It's identical to LicenesEQ.
-func Licenes(v string) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldLicenes), v))
-	})
-}
-
-// ExpertiseIDEQ applies the EQ predicate on the "ExpertiseID" field.
-func ExpertiseIDEQ(v int) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldExpertiseID), v))
-	})
-}
-
-// ExpertiseIDNEQ applies the NEQ predicate on the "ExpertiseID" field.
-func ExpertiseIDNEQ(v int) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldExpertiseID), v))
-	})
-}
-
-// ExpertiseIDIn applies the In predicate on the "ExpertiseID" field.
-func ExpertiseIDIn(vs ...int) predicate.Expertise {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Expertise(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldExpertiseID), v...))
-	})
-}
-
-// ExpertiseIDNotIn applies the NotIn predicate on the "ExpertiseID" field.
-func ExpertiseIDNotIn(vs ...int) predicate.Expertise {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Expertise(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldExpertiseID), v...))
-	})
-}
-
-// ExpertiseIDGT applies the GT predicate on the "ExpertiseID" field.
-func ExpertiseIDGT(v int) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldExpertiseID), v))
-	})
-}
-
-// ExpertiseIDGTE applies the GTE predicate on the "ExpertiseID" field.
-func ExpertiseIDGTE(v int) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldExpertiseID), v))
-	})
-}
-
-// ExpertiseIDLT applies the LT predicate on the "ExpertiseID" field.
-func ExpertiseIDLT(v int) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldExpertiseID), v))
-	})
-}
-
-// ExpertiseIDLTE applies the LTE predicate on the "ExpertiseID" field.
-func ExpertiseIDLTE(v int) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldExpertiseID), v))
 	})
 }
 
@@ -296,117 +206,6 @@ func ExpertiseNameEqualFold(v string) predicate.Expertise {
 func ExpertiseNameContainsFold(v string) predicate.Expertise {
 	return predicate.Expertise(func(s *sql.Selector) {
 		s.Where(sql.ContainsFold(s.C(FieldExpertiseName), v))
-	})
-}
-
-// LicenesEQ applies the EQ predicate on the "Licenes" field.
-func LicenesEQ(v string) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldLicenes), v))
-	})
-}
-
-// LicenesNEQ applies the NEQ predicate on the "Licenes" field.
-func LicenesNEQ(v string) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldLicenes), v))
-	})
-}
-
-// LicenesIn applies the In predicate on the "Licenes" field.
-func LicenesIn(vs ...string) predicate.Expertise {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Expertise(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldLicenes), v...))
-	})
-}
-
-// LicenesNotIn applies the NotIn predicate on the "Licenes" field.
-func LicenesNotIn(vs ...string) predicate.Expertise {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Expertise(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldLicenes), v...))
-	})
-}
-
-// LicenesGT applies the GT predicate on the "Licenes" field.
-func LicenesGT(v string) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldLicenes), v))
-	})
-}
-
-// LicenesGTE applies the GTE predicate on the "Licenes" field.
-func LicenesGTE(v string) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldLicenes), v))
-	})
-}
-
-// LicenesLT applies the LT predicate on the "Licenes" field.
-func LicenesLT(v string) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldLicenes), v))
-	})
-}
-
-// LicenesLTE applies the LTE predicate on the "Licenes" field.
-func LicenesLTE(v string) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldLicenes), v))
-	})
-}
-
-// LicenesContains applies the Contains predicate on the "Licenes" field.
-func LicenesContains(v string) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.Contains(s.C(FieldLicenes), v))
-	})
-}
-
-// LicenesHasPrefix applies the HasPrefix predicate on the "Licenes" field.
-func LicenesHasPrefix(v string) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.HasPrefix(s.C(FieldLicenes), v))
-	})
-}
-
-// LicenesHasSuffix applies the HasSuffix predicate on the "Licenes" field.
-func LicenesHasSuffix(v string) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.HasSuffix(s.C(FieldLicenes), v))
-	})
-}
-
-// LicenesEqualFold applies the EqualFold predicate on the "Licenes" field.
-func LicenesEqualFold(v string) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.EqualFold(s.C(FieldLicenes), v))
-	})
-}
-
-// LicenesContainsFold applies the ContainsFold predicate on the "Licenes" field.
-func LicenesContainsFold(v string) predicate.Expertise {
-	return predicate.Expertise(func(s *sql.Selector) {
-		s.Where(sql.ContainsFold(s.C(FieldLicenes), v))
 	})
 }
 

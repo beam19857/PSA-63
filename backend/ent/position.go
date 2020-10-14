@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/beam19857/app/ent/position"
-	"github.com/facebook/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql"
 )
 
 // Position is the model entity for the Position schema.
@@ -15,8 +15,6 @@ type Position struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// PositionID holds the value of the "PositionID" field.
-	PositionID int `json:"PositionID,omitempty"`
 	// PositionName holds the value of the "PositionName" field.
 	PositionName string `json:"PositionName,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -46,7 +44,6 @@ func (e PositionEdges) PositionUserOrErr() ([]*User, error) {
 func (*Position) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullInt64{},  // PositionID
 		&sql.NullString{}, // PositionName
 	}
 }
@@ -63,13 +60,8 @@ func (po *Position) assignValues(values ...interface{}) error {
 	}
 	po.ID = int(value.Int64)
 	values = values[1:]
-	if value, ok := values[0].(*sql.NullInt64); !ok {
-		return fmt.Errorf("unexpected type %T for field PositionID", values[0])
-	} else if value.Valid {
-		po.PositionID = int(value.Int64)
-	}
-	if value, ok := values[1].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field PositionName", values[1])
+	if value, ok := values[0].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field PositionName", values[0])
 	} else if value.Valid {
 		po.PositionName = value.String
 	}
@@ -104,8 +96,6 @@ func (po *Position) String() string {
 	var builder strings.Builder
 	builder.WriteString("Position(")
 	builder.WriteString(fmt.Sprintf("id=%v", po.ID))
-	builder.WriteString(", PositionID=")
-	builder.WriteString(fmt.Sprintf("%v", po.PositionID))
 	builder.WriteString(", PositionName=")
 	builder.WriteString(po.PositionName)
 	builder.WriteByte(')')

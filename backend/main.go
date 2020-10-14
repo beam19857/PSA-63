@@ -22,15 +22,15 @@ type User struct {
 	DoctorEmail string
 }
 type Departments struct {
-	Departmet []Depatment
+	Department []Department
 }
-type Depatment struct {
-	DeparmentName string
+type Department struct {
+	DepartmentName string
 }
 type Expertises struct {
 	Expertise []Expertise
 }
-type Espertise struct {
+type Expertise struct {
 	ExpertiseName string
 }
 type Positions struct {
@@ -100,21 +100,50 @@ func main() {
 	controllers.NewPositionController(v1, client)
 
 	// Set Department Data
-	department := []string{"Antenatal","Operating Room","Deceased Receive","Treatment"}
-	for _, r := range department {
+	departments := Departments{
+		Department: []Department{
+			Department{"Antenatal"},
+			Department{"Operating Room"},
+			Department{"Deceased Receive"},
+			Department{"Treatment"},
+		},
+	}
+	for _, d := range departments.Department {
 		client.Department.
 			Create().
-			SetDepartmentName(r).
+			SetDepartmentName(d.DepartmentName).
 			Save(context.Background())
 	}
 		// Set Position Data
-	position := []string{"Nurse","Doctor","Parcel worker","Assistant","Medical records officer"}
-	for _, r := range position {
-		client.Position.
-			Create().
-			SetPositionName(r).
-			Save(context.Background())
-	}
+		positions := Positions{
+			Position: []Position{
+				Position{"Nurse"},
+				Position{"Doctor"},
+				Position{"Parcel worker"},
+				Position{"Assistant"},
+				Position{"Medical records officer"},
+			},
+		}
+		for _, p := range positions.Position {
+			client.Position.
+				Create().
+				SetPositionName(p.PositionName).
+				Save(context.Background())
+		}
+		// Set Expertise Data
+		expertises := Expertises{
+			Expertise: []Expertise{
+				Expertise{"Internal Medicine"},
+				Expertise{"Obstetrics"},
+				Expertise{"Bone surgery"},
+			},
+		}
+		for _, e := range expertises.Expertise {
+			client.Expertise.
+				Create().
+				SetExpertiseName(e.ExpertiseName).
+				Save(context.Background())
+		}
 
 
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))

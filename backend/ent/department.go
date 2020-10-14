@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/beam19857/app/ent/department"
-	"github.com/facebook/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql"
 )
 
 // Department is the model entity for the Department schema.
@@ -15,8 +15,6 @@ type Department struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// DepartmentID holds the value of the "DepartmentID" field.
-	DepartmentID int `json:"DepartmentID,omitempty"`
 	// DepartmentName holds the value of the "DepartmentName" field.
 	DepartmentName string `json:"DepartmentName,omitempty"`
 	// Edges holds the relations/edges for other nodes in the graph.
@@ -46,7 +44,6 @@ func (e DepartmentEdges) DepartmentUserOrErr() ([]*User, error) {
 func (*Department) scanValues() []interface{} {
 	return []interface{}{
 		&sql.NullInt64{},  // id
-		&sql.NullInt64{},  // DepartmentID
 		&sql.NullString{}, // DepartmentName
 	}
 }
@@ -63,13 +60,8 @@ func (d *Department) assignValues(values ...interface{}) error {
 	}
 	d.ID = int(value.Int64)
 	values = values[1:]
-	if value, ok := values[0].(*sql.NullInt64); !ok {
-		return fmt.Errorf("unexpected type %T for field DepartmentID", values[0])
-	} else if value.Valid {
-		d.DepartmentID = int(value.Int64)
-	}
-	if value, ok := values[1].(*sql.NullString); !ok {
-		return fmt.Errorf("unexpected type %T for field DepartmentName", values[1])
+	if value, ok := values[0].(*sql.NullString); !ok {
+		return fmt.Errorf("unexpected type %T for field DepartmentName", values[0])
 	} else if value.Valid {
 		d.DepartmentName = value.String
 	}
@@ -104,8 +96,6 @@ func (d *Department) String() string {
 	var builder strings.Builder
 	builder.WriteString("Department(")
 	builder.WriteString(fmt.Sprintf("id=%v", d.ID))
-	builder.WriteString(", DepartmentID=")
-	builder.WriteString(fmt.Sprintf("%v", d.DepartmentID))
 	builder.WriteString(", DepartmentName=")
 	builder.WriteString(d.DepartmentName)
 	builder.WriteByte(')')

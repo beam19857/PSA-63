@@ -6,14 +6,13 @@ import (
 	"context"
 	"errors"
 	"fmt"
-	"time"
 
 	"github.com/beam19857/app/ent/department"
 	"github.com/beam19857/app/ent/expertise"
 	"github.com/beam19857/app/ent/position"
 	"github.com/beam19857/app/ent/user"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
-	"github.com/facebook/ent/schema/field"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // UserCreate is the builder for creating a User entity.
@@ -23,27 +22,15 @@ type UserCreate struct {
 	hooks    []Hook
 }
 
-// SetDoctorID sets the DoctorID field.
-func (uc *UserCreate) SetDoctorID(i int) *UserCreate {
-	uc.mutation.SetDoctorID(i)
-	return uc
-}
-
 // SetDoctorName sets the DoctorName field.
 func (uc *UserCreate) SetDoctorName(s string) *UserCreate {
 	uc.mutation.SetDoctorName(s)
 	return uc
 }
+
 // SetDoctorEmail sets the DoctorEmail field.
 func (uc *UserCreate) SetDoctorEmail(s string) *UserCreate {
 	uc.mutation.SetDoctorEmail(s)
-	return uc
-}
-
-
-// SetDate sets the Date field.
-func (uc *UserCreate) SetDate(t time.Time) *UserCreate {
-	uc.mutation.SetDate(t)
 	return uc
 }
 
@@ -111,8 +98,11 @@ func (uc *UserCreate) Mutation() *UserMutation {
 
 // Save creates the User in the database.
 func (uc *UserCreate) Save(ctx context.Context) (*User, error) {
-	if err := uc.preSave(); err != nil {
-		return nil, err
+	if _, ok := uc.mutation.DoctorName(); !ok {
+		return nil, &ValidationError{Name: "DoctorName", err: errors.New("ent: missing required field \"DoctorName\"")}
+	}
+	if _, ok := uc.mutation.DoctorEmail(); !ok {
+		return nil, &ValidationError{Name: "DoctorEmail", err: errors.New("ent: missing required field \"DoctorEmail\"")}
 	}
 	var (
 		err  error
@@ -150,22 +140,6 @@ func (uc *UserCreate) SaveX(ctx context.Context) *User {
 	return v
 }
 
-func (uc *UserCreate) preSave() error {
-	if _, ok := uc.mutation.DoctorID(); !ok {
-		return &ValidationError{Name: "DoctorID", err: errors.New("ent: missing required field \"DoctorID\"")}
-	}
-	if _, ok := uc.mutation.DoctorName(); !ok {
-		return &ValidationError{Name: "DoctorName", err: errors.New("ent: missing required field \"DoctorName\"")}
-	}
-	if _, ok := uc.mutation.DoctorEmail(); !ok {
-		return &ValidationError{Name: "DoctorEmail", err: errors.New("ent: missing required field \"DoctorEmail\"")}
-	}
-	if _, ok := uc.mutation.Date(); !ok {
-		return &ValidationError{Name: "Date", err: errors.New("ent: missing required field \"Date\"")}
-	}
-	return nil
-}
-
 func (uc *UserCreate) sqlSave(ctx context.Context) (*User, error) {
 	u, _spec := uc.createSpec()
 	if err := sqlgraph.CreateNode(ctx, uc.driver, _spec); err != nil {
@@ -190,14 +164,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			},
 		}
 	)
-	if value, ok := uc.mutation.DoctorID(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: user.FieldDoctorID,
-		})
-		u.DoctorID = value
-	}
 	if value, ok := uc.mutation.DoctorName(); ok {
 		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -213,14 +179,6 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 			Column: user.FieldDoctorEmail,
 		})
 		u.DoctorEmail = value
-	}
-	if value, ok := uc.mutation.Date(); ok {
-		_spec.Fields = append(_spec.Fields, &sqlgraph.FieldSpec{
-			Type:   field.TypeTime,
-			Value:  value,
-			Column: user.FieldDate,
-		})
-		u.Date = value
 	}
 	if nodes := uc.mutation.UserDepartmentIDs(); len(nodes) > 0 {
 		edge := &sqlgraph.EdgeSpec{
@@ -280,70 +238,4 @@ func (uc *UserCreate) createSpec() (*User, *sqlgraph.CreateSpec) {
 		_spec.Edges = append(_spec.Edges, edge)
 	}
 	return u, _spec
-}
-
-// UserCreateBulk is the builder for creating a bulk of User entities.
-type UserCreateBulk struct {
-	config
-	builders []*UserCreate
-}
-
-// Save creates the User entities in the database.
-func (ucb *UserCreateBulk) Save(ctx context.Context) ([]*User, error) {
-	specs := make([]*sqlgraph.CreateSpec, len(ucb.builders))
-	nodes := make([]*User, len(ucb.builders))
-	mutators := make([]Mutator, len(ucb.builders))
-	for i := range ucb.builders {
-		func(i int, root context.Context) {
-			builder := ucb.builders[i]
-			var mut Mutator = MutateFunc(func(ctx context.Context, m Mutation) (Value, error) {
-				if err := builder.preSave(); err != nil {
-					return nil, err
-				}
-				mutation, ok := m.(*UserMutation)
-				if !ok {
-					return nil, fmt.Errorf("unexpected mutation type %T", m)
-				}
-				builder.mutation = mutation
-				nodes[i], specs[i] = builder.createSpec()
-				var err error
-				if i < len(mutators)-1 {
-					_, err = mutators[i+1].Mutate(root, ucb.builders[i+1].mutation)
-				} else {
-					// Invoke the actual operation on the latest mutation in the chain.
-					if err = sqlgraph.BatchCreate(ctx, ucb.driver, &sqlgraph.BatchCreateSpec{Nodes: specs}); err != nil {
-						if cerr, ok := isSQLConstraintError(err); ok {
-							err = cerr
-						}
-					}
-				}
-				mutation.done = true
-				if err != nil {
-					return nil, err
-				}
-				id := specs[i].ID.Value.(int64)
-				nodes[i].ID = int(id)
-				return nodes[i], nil
-			})
-			for i := len(builder.hooks) - 1; i >= 0; i-- {
-				mut = builder.hooks[i](mut)
-			}
-			mutators[i] = mut
-		}(i, ctx)
-	}
-	if len(mutators) > 0 {
-		if _, err := mutators[0].Mutate(ctx, ucb.builders[0].mutation); err != nil {
-			return nil, err
-		}
-	}
-	return nodes, nil
-}
-
-// SaveX calls Save and panics if Save returns an error.
-func (ucb *UserCreateBulk) SaveX(ctx context.Context) []*User {
-	v, err := ucb.Save(ctx)
-	if err != nil {
-		panic(err)
-	}
-	return v
 }

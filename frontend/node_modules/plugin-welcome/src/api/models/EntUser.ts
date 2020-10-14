@@ -14,10 +14,10 @@
 
 import { exists, mapValues } from '../runtime';
 import {
-    EntHooks,
-    EntHooksFromJSON,
-    EntHooksFromJSONTyped,
-    EntHooksToJSON,
+    EntUserEdges,
+    EntUserEdgesFromJSON,
+    EntUserEdgesFromJSONTyped,
+    EntUserEdgesToJSON,
 } from './';
 
 /**
@@ -27,29 +27,35 @@ import {
  */
 export interface EntUser {
     /**
-     * Age holds the value of the "age" field.
-     * @type {number}
-     * @memberof EntUser
-     */
-    age?: number;
-    /**
-     * debug enable a debug logging.
-     * @type {boolean}
-     * @memberof EntUser
-     */
-    debug?: boolean;
-    /**
-     * driver used for executing database requests.
+     * DoctorEmail holds the value of the "DoctorEmail" field.
      * @type {string}
      * @memberof EntUser
      */
-    driver?: string;
+    doctorEmail?: string;
     /**
-     * 
-     * @type {EntHooks}
+     * DoctorName holds the value of the "DoctorName" field.
+     * @type {string}
      * @memberof EntUser
      */
-    hooks?: EntHooks;
+    doctorName?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof EntUser
+     */
+    departmentID?: number;
+    /**
+     * 
+     * @type {EntUserEdges}
+     * @memberof EntUser
+     */
+    edges?: EntUserEdges;
+    /**
+     * 
+     * @type {number}
+     * @memberof EntUser
+     */
+    expertiseID?: number;
     /**
      * ID of the ent.
      * @type {number}
@@ -57,11 +63,11 @@ export interface EntUser {
      */
     id?: number;
     /**
-     * Name holds the value of the "name" field.
-     * @type {string}
+     * 
+     * @type {number}
      * @memberof EntUser
      */
-    name?: string;
+    positionID?: number;
 }
 
 export function EntUserFromJSON(json: any): EntUser {
@@ -74,12 +80,13 @@ export function EntUserFromJSONTyped(json: any, ignoreDiscriminator: boolean): E
     }
     return {
         
-        'age': !exists(json, 'age') ? undefined : json['age'],
-        'debug': !exists(json, 'debug') ? undefined : json['debug'],
-        'driver': !exists(json, 'driver') ? undefined : json['driver'],
-        'hooks': !exists(json, 'hooks') ? undefined : EntHooksFromJSON(json['hooks']),
+        'doctorEmail': !exists(json, 'DoctorEmail') ? undefined : json['DoctorEmail'],
+        'doctorName': !exists(json, 'DoctorName') ? undefined : json['DoctorName'],
+        'departmentID': !exists(json, 'departmentID') ? undefined : json['departmentID'],
+        'edges': !exists(json, 'edges') ? undefined : EntUserEdgesFromJSON(json['edges']),
+        'expertiseID': !exists(json, 'expertiseID') ? undefined : json['expertiseID'],
         'id': !exists(json, 'id') ? undefined : json['id'],
-        'name': !exists(json, 'name') ? undefined : json['name'],
+        'positionID': !exists(json, 'positionID') ? undefined : json['positionID'],
     };
 }
 
@@ -92,12 +99,13 @@ export function EntUserToJSON(value?: EntUser | null): any {
     }
     return {
         
-        'age': value.age,
-        'debug': value.debug,
-        'driver': value.driver,
-        'hooks': EntHooksToJSON(value.hooks),
+        'DoctorEmail': value.doctorEmail,
+        'DoctorName': value.doctorName,
+        'departmentID': value.departmentID,
+        'edges': EntUserEdgesToJSON(value.edges),
+        'expertiseID': value.expertiseID,
         'id': value.id,
-        'name': value.name,
+        'positionID': value.positionID,
     };
 }
 

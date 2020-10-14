@@ -42,7 +42,6 @@ func (ctl *PositionController) CreatePosition(c *gin.Context) {
 
 	u, err := ctl.client.Position.
 		Create().
-		SetPositionID(obj.PositionID).
 		SetPositionName(obj.PositionName).
 		Save(context.Background())
 	if err != nil {

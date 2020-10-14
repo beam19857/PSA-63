@@ -9,9 +9,9 @@ import (
 	"github.com/beam19857/app/ent/department"
 	"github.com/beam19857/app/ent/predicate"
 	"github.com/beam19857/app/ent/user"
-	"github.com/facebook/ent/dialect/sql"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
-	"github.com/facebook/ent/schema/field"
+	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // DepartmentUpdate is the builder for updating Department entities.
@@ -25,19 +25,6 @@ type DepartmentUpdate struct {
 // Where adds a new predicate for the builder.
 func (du *DepartmentUpdate) Where(ps ...predicate.Department) *DepartmentUpdate {
 	du.predicates = append(du.predicates, ps...)
-	return du
-}
-
-// SetDepartmentID sets the DepartmentID field.
-func (du *DepartmentUpdate) SetDepartmentID(i int) *DepartmentUpdate {
-	du.mutation.ResetDepartmentID()
-	du.mutation.SetDepartmentID(i)
-	return du
-}
-
-// AddDepartmentID adds i to DepartmentID.
-func (du *DepartmentUpdate) AddDepartmentID(i int) *DepartmentUpdate {
-	du.mutation.AddDepartmentID(i)
 	return du
 }
 
@@ -152,20 +139,6 @@ func (du *DepartmentUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := du.mutation.DepartmentID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: department.FieldDepartmentID,
-		})
-	}
-	if value, ok := du.mutation.AddedDepartmentID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: department.FieldDepartmentID,
-		})
-	}
 	if value, ok := du.mutation.DepartmentName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
@@ -227,19 +200,6 @@ type DepartmentUpdateOne struct {
 	config
 	hooks    []Hook
 	mutation *DepartmentMutation
-}
-
-// SetDepartmentID sets the DepartmentID field.
-func (duo *DepartmentUpdateOne) SetDepartmentID(i int) *DepartmentUpdateOne {
-	duo.mutation.ResetDepartmentID()
-	duo.mutation.SetDepartmentID(i)
-	return duo
-}
-
-// AddDepartmentID adds i to DepartmentID.
-func (duo *DepartmentUpdateOne) AddDepartmentID(i int) *DepartmentUpdateOne {
-	duo.mutation.AddDepartmentID(i)
-	return duo
 }
 
 // SetDepartmentName sets the DepartmentName field.
@@ -351,20 +311,6 @@ func (duo *DepartmentUpdateOne) sqlSave(ctx context.Context) (d *Department, err
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Department.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := duo.mutation.DepartmentID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: department.FieldDepartmentID,
-		})
-	}
-	if value, ok := duo.mutation.AddedDepartmentID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: department.FieldDepartmentID,
-		})
-	}
 	if value, ok := duo.mutation.DepartmentName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,

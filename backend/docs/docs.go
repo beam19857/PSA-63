@@ -774,7 +774,7 @@ var doc = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/ent.User"
+                            "$ref": "#/definitions/controllers.User"
                         }
                     }
                 ],
@@ -939,13 +939,23 @@ var doc = `{
         }
     },
     "definitions": {
+        "controllers.User": {
+            "type": "object",
+            "properties": {
+                "doctorEmail": {
+                    "type": "string"
+                },
+                "doctorID": {
+                    "type": "integer"
+                },
+                "doctorName": {
+                    "type": "string"
+                }
+            }
+        },
         "ent.Department": {
             "type": "object",
             "properties": {
-                "DepartmentID": {
-                    "description": "DepartmentID holds the value of the \"DepartmentID\" field.",
-                    "type": "integer"
-                },
                 "DepartmentName": {
                     "description": "DepartmentName holds the value of the \"DepartmentName\" field.",
                     "type": "string"
@@ -976,16 +986,8 @@ var doc = `{
         "ent.Expertise": {
             "type": "object",
             "properties": {
-                "ExpertiseID": {
-                    "description": "ExpertiseID holds the value of the \"ExpertiseID\" field.",
-                    "type": "integer"
-                },
                 "ExpertiseName": {
                     "description": "ExpertiseName holds the value of the \"ExpertiseName\" field.",
-                    "type": "string"
-                },
-                "Licenes": {
-                    "description": "Licenes holds the value of the \"Licenes\" field.",
                     "type": "string"
                 },
                 "edges": {
@@ -1014,10 +1016,6 @@ var doc = `{
         "ent.Position": {
             "type": "object",
             "properties": {
-                "PositionID": {
-                    "description": "PositionID holds the value of the \"PositionID\" field.",
-                    "type": "integer"
-                },
                 "PositionName": {
                     "description": "PositionName holds the value of the \"PositionName\" field.",
                     "type": "string"
@@ -1048,25 +1046,30 @@ var doc = `{
         "ent.User": {
             "type": "object",
             "properties": {
-                "Date": {
-                    "description": "Date holds the value of the \"Date\" field.",
+                "DoctorEmail": {
+                    "description": "DoctorEmail holds the value of the \"DoctorEmail\" field.",
                     "type": "string"
-                },
-                "DoctorID": {
-                    "description": "DoctorID holds the value of the \"DoctorID\" field.",
-                    "type": "integer"
                 },
                 "DoctorName": {
                     "description": "DoctorName holds the value of the \"DoctorName\" field.",
                     "type": "string"
+                },
+                "departmentID": {
+                    "type": "integer"
                 },
                 "edges": {
                     "description": "Edges holds the relations/edges for other nodes in the graph.\nThe values are being populated by the UserQuery when eager-loading is set.",
                     "type": "object",
                     "$ref": "#/definitions/ent.UserEdges"
                 },
+                "expertiseID": {
+                    "type": "integer"
+                },
                 "id": {
                     "description": "ID of the ent.",
+                    "type": "integer"
+                },
+                "positionID": {
                     "type": "integer"
                 }
             }

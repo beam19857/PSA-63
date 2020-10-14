@@ -12,9 +12,9 @@ import (
 	"github.com/beam19857/app/ent/department"
 	"github.com/beam19857/app/ent/predicate"
 	"github.com/beam19857/app/ent/user"
-	"github.com/facebook/ent/dialect/sql"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
-	"github.com/facebook/ent/schema/field"
+	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // DepartmentQuery is the builder for querying Department entities.
@@ -270,12 +270,12 @@ func (dq *DepartmentQuery) WithDepartmentUser(opts ...func(*UserQuery)) *Departm
 // Example:
 //
 //	var v []struct {
-//		DepartmentID int `json:"DepartmentID,omitempty"`
+//		DepartmentName string `json:"DepartmentName,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Department.Query().
-//		GroupBy(department.FieldDepartmentID).
+//		GroupBy(department.FieldDepartmentName).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -296,11 +296,11 @@ func (dq *DepartmentQuery) GroupBy(field string, fields ...string) *DepartmentGr
 // Example:
 //
 //	var v []struct {
-//		DepartmentID int `json:"DepartmentID,omitempty"`
+//		DepartmentName string `json:"DepartmentName,omitempty"`
 //	}
 //
 //	client.Department.Query().
-//		Select(department.FieldDepartmentID).
+//		Select(department.FieldDepartmentName).
 //		Scan(ctx, &v)
 //
 func (dq *DepartmentQuery) Select(field string, fields ...string) *DepartmentSelect {
@@ -371,13 +371,13 @@ func (dq *DepartmentQuery) sqlAll(ctx context.Context) ([]*Department, error) {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.department_department_user
+			fk := n.DepartmentID
 			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "department_department_user" is nil for node %v`, n.ID)
+				return nil, fmt.Errorf(`foreign-key "DepartmentID" is nil for node %v`, n.ID)
 			}
 			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "department_department_user" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "DepartmentID" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.DepartmentUser = append(node.Edges.DepartmentUser, n)
 		}

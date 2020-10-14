@@ -6,7 +6,7 @@ import (
 	"context"
 	"sync"
 
-	"github.com/facebook/ent/dialect"
+	"github.com/facebookincubator/ent/dialect"
 )
 
 // Tx is a transactional client that is created by calling Client.Tx().

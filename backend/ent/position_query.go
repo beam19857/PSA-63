@@ -12,9 +12,9 @@ import (
 	"github.com/beam19857/app/ent/position"
 	"github.com/beam19857/app/ent/predicate"
 	"github.com/beam19857/app/ent/user"
-	"github.com/facebook/ent/dialect/sql"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
-	"github.com/facebook/ent/schema/field"
+	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // PositionQuery is the builder for querying Position entities.
@@ -270,12 +270,12 @@ func (pq *PositionQuery) WithPositionUser(opts ...func(*UserQuery)) *PositionQue
 // Example:
 //
 //	var v []struct {
-//		PositionID int `json:"PositionID,omitempty"`
+//		PositionName string `json:"PositionName,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.Position.Query().
-//		GroupBy(position.FieldPositionID).
+//		GroupBy(position.FieldPositionName).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -296,11 +296,11 @@ func (pq *PositionQuery) GroupBy(field string, fields ...string) *PositionGroupB
 // Example:
 //
 //	var v []struct {
-//		PositionID int `json:"PositionID,omitempty"`
+//		PositionName string `json:"PositionName,omitempty"`
 //	}
 //
 //	client.Position.Query().
-//		Select(position.FieldPositionID).
+//		Select(position.FieldPositionName).
 //		Scan(ctx, &v)
 //
 func (pq *PositionQuery) Select(field string, fields ...string) *PositionSelect {
@@ -371,13 +371,13 @@ func (pq *PositionQuery) sqlAll(ctx context.Context) ([]*Position, error) {
 			return nil, err
 		}
 		for _, n := range neighbors {
-			fk := n.position_position_user
+			fk := n.PositionID
 			if fk == nil {
-				return nil, fmt.Errorf(`foreign-key "position_position_user" is nil for node %v`, n.ID)
+				return nil, fmt.Errorf(`foreign-key "PositionID" is nil for node %v`, n.ID)
 			}
 			node, ok := nodeids[*fk]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "position_position_user" returned %v for node %v`, *fk, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "PositionID" returned %v for node %v`, *fk, n.ID)
 			}
 			node.Edges.PositionUser = append(node.Edges.PositionUser, n)
 		}

@@ -15,16 +15,64 @@
 
 import * as runtime from '../runtime';
 import {
+    ControllersUser,
+    ControllersUserFromJSON,
+    ControllersUserToJSON,
+    EntDepartment,
+    EntDepartmentFromJSON,
+    EntDepartmentToJSON,
+    EntExpertise,
+    EntExpertiseFromJSON,
+    EntExpertiseToJSON,
+    EntPosition,
+    EntPositionFromJSON,
+    EntPositionToJSON,
     EntUser,
     EntUserFromJSON,
     EntUserToJSON,
 } from '../models';
 
+export interface CreateDepartmentRequest {
+    department: EntDepartment;
+}
+
+export interface CreateExpertiseRequest {
+    expertise: EntExpertise;
+}
+
+export interface CreatePositionRequest {
+    position: EntPosition;
+}
+
 export interface CreateUserRequest {
-    user: EntUser;
+    user: ControllersUser;
+}
+
+export interface DeleteDepartmentRequest {
+    id: number;
+}
+
+export interface DeleteExpertiseRequest {
+    id: number;
+}
+
+export interface DeletePositionRequest {
+    id: number;
 }
 
 export interface DeleteUserRequest {
+    id: number;
+}
+
+export interface GetDepartmentRequest {
+    id: number;
+}
+
+export interface GetExpertiseRequest {
+    id: number;
+}
+
+export interface GetPositionRequest {
     id: number;
 }
 
@@ -32,9 +80,39 @@ export interface GetUserRequest {
     id: number;
 }
 
+export interface ListDepartmentRequest {
+    limit?: number;
+    offset?: number;
+}
+
+export interface ListExpertiseRequest {
+    limit?: number;
+    offset?: number;
+}
+
+export interface ListPositionRequest {
+    limit?: number;
+    offset?: number;
+}
+
 export interface ListUserRequest {
     limit?: number;
     offset?: number;
+}
+
+export interface UpdateDepartmentRequest {
+    id: number;
+    department: EntDepartment;
+}
+
+export interface UpdateExpertiseRequest {
+    id: number;
+    expertise: EntExpertise;
+}
+
+export interface UpdatePositionRequest {
+    id: number;
+    position: EntPosition;
 }
 
 export interface UpdateUserRequest {
@@ -46,6 +124,111 @@ export interface UpdateUserRequest {
  * 
  */
 export class DefaultApi extends runtime.BaseAPI {
+
+    /**
+     * Create department
+     * Create department
+     */
+    async createDepartmentRaw(requestParameters: CreateDepartmentRequest): Promise<runtime.ApiResponse<EntDepartment>> {
+        if (requestParameters.department === null || requestParameters.department === undefined) {
+            throw new runtime.RequiredError('department','Required parameter requestParameters.department was null or undefined when calling createDepartment.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/departments`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EntDepartmentToJSON(requestParameters.department),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntDepartmentFromJSON(jsonValue));
+    }
+
+    /**
+     * Create department
+     * Create department
+     */
+    async createDepartment(requestParameters: CreateDepartmentRequest): Promise<EntDepartment> {
+        const response = await this.createDepartmentRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * Create expertise
+     * Create expertise
+     */
+    async createExpertiseRaw(requestParameters: CreateExpertiseRequest): Promise<runtime.ApiResponse<EntExpertise>> {
+        if (requestParameters.expertise === null || requestParameters.expertise === undefined) {
+            throw new runtime.RequiredError('expertise','Required parameter requestParameters.expertise was null or undefined when calling createExpertise.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/expertises`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EntExpertiseToJSON(requestParameters.expertise),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntExpertiseFromJSON(jsonValue));
+    }
+
+    /**
+     * Create expertise
+     * Create expertise
+     */
+    async createExpertise(requestParameters: CreateExpertiseRequest): Promise<EntExpertise> {
+        const response = await this.createExpertiseRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * Create position
+     * Create position
+     */
+    async createPositionRaw(requestParameters: CreatePositionRequest): Promise<runtime.ApiResponse<EntPosition>> {
+        if (requestParameters.position === null || requestParameters.position === undefined) {
+            throw new runtime.RequiredError('position','Required parameter requestParameters.position was null or undefined when calling createPosition.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/positions`,
+            method: 'POST',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EntPositionToJSON(requestParameters.position),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntPositionFromJSON(jsonValue));
+    }
+
+    /**
+     * Create position
+     * Create position
+     */
+    async createPosition(requestParameters: CreatePositionRequest): Promise<EntPosition> {
+        const response = await this.createPositionRaw(requestParameters);
+        return await response.value();
+    }
 
     /**
      * Create user
@@ -67,7 +250,7 @@ export class DefaultApi extends runtime.BaseAPI {
             method: 'POST',
             headers: headerParameters,
             query: queryParameters,
-            body: EntUserToJSON(requestParameters.user),
+            body: ControllersUserToJSON(requestParameters.user),
         });
 
         return new runtime.JSONApiResponse(response, (jsonValue) => EntUserFromJSON(jsonValue));
@@ -83,10 +266,106 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * get department by ID
+     * Delete a department entity by ID
+     */
+    async deleteDepartmentRaw(requestParameters: DeleteDepartmentRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteDepartment.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/departments/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * get department by ID
+     * Delete a department entity by ID
+     */
+    async deleteDepartment(requestParameters: DeleteDepartmentRequest): Promise<object> {
+        const response = await this.deleteDepartmentRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get expertise by ID
+     * Delete a expertise entity by ID
+     */
+    async deleteExpertiseRaw(requestParameters: DeleteExpertiseRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteExpertise.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/expertises/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * get expertise by ID
+     * Delete a expertise entity by ID
+     */
+    async deleteExpertise(requestParameters: DeleteExpertiseRequest): Promise<object> {
+        const response = await this.deleteExpertiseRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get position by ID
+     * Delete a position entity by ID
+     */
+    async deletePositionRaw(requestParameters: DeletePositionRequest): Promise<runtime.ApiResponse<object>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deletePosition.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/positions/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'DELETE',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse<any>(response);
+    }
+
+    /**
+     * get position by ID
+     * Delete a position entity by ID
+     */
+    async deletePosition(requestParameters: DeletePositionRequest): Promise<object> {
+        const response = await this.deletePositionRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * get user by ID
      * Delete a user entity by ID
      */
-    async deleteUserRaw(requestParameters: DeleteUserRequest): Promise<runtime.ApiResponse<{ [key: string]: object; }>> {
+    async deleteUserRaw(requestParameters: DeleteUserRequest): Promise<runtime.ApiResponse<object>> {
         if (requestParameters.id === null || requestParameters.id === undefined) {
             throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling deleteUser.');
         }
@@ -109,8 +388,104 @@ export class DefaultApi extends runtime.BaseAPI {
      * get user by ID
      * Delete a user entity by ID
      */
-    async deleteUser(requestParameters: DeleteUserRequest): Promise<{ [key: string]: object; }> {
+    async deleteUser(requestParameters: DeleteUserRequest): Promise<object> {
         const response = await this.deleteUserRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get department by ID
+     * Get a department entity by ID
+     */
+    async getDepartmentRaw(requestParameters: GetDepartmentRequest): Promise<runtime.ApiResponse<EntDepartment>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getDepartment.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/departments/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntDepartmentFromJSON(jsonValue));
+    }
+
+    /**
+     * get department by ID
+     * Get a department entity by ID
+     */
+    async getDepartment(requestParameters: GetDepartmentRequest): Promise<EntDepartment> {
+        const response = await this.getDepartmentRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get expertise by ID
+     * Get a expertise entity by ID
+     */
+    async getExpertiseRaw(requestParameters: GetExpertiseRequest): Promise<runtime.ApiResponse<EntExpertise>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getExpertise.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/expertises/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntExpertiseFromJSON(jsonValue));
+    }
+
+    /**
+     * get expertise by ID
+     * Get a expertise entity by ID
+     */
+    async getExpertise(requestParameters: GetExpertiseRequest): Promise<EntExpertise> {
+        const response = await this.getExpertiseRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * get position by ID
+     * Get a position entity by ID
+     */
+    async getPositionRaw(requestParameters: GetPositionRequest): Promise<runtime.ApiResponse<EntPosition>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getPosition.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/positions/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntPositionFromJSON(jsonValue));
+    }
+
+    /**
+     * get position by ID
+     * Get a position entity by ID
+     */
+    async getPosition(requestParameters: GetPositionRequest): Promise<EntPosition> {
+        const response = await this.getPositionRaw(requestParameters);
         return await response.value();
     }
 
@@ -147,6 +522,114 @@ export class DefaultApi extends runtime.BaseAPI {
     }
 
     /**
+     * list department entities
+     * List department entities
+     */
+    async listDepartmentRaw(requestParameters: ListDepartmentRequest): Promise<runtime.ApiResponse<Array<EntDepartment>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/departments`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntDepartmentFromJSON));
+    }
+
+    /**
+     * list department entities
+     * List department entities
+     */
+    async listDepartment(requestParameters: ListDepartmentRequest): Promise<Array<EntDepartment>> {
+        const response = await this.listDepartmentRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * list expertise entities
+     * List expertise entities
+     */
+    async listExpertiseRaw(requestParameters: ListExpertiseRequest): Promise<runtime.ApiResponse<Array<EntExpertise>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/expertises`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntExpertiseFromJSON));
+    }
+
+    /**
+     * list expertise entities
+     * List expertise entities
+     */
+    async listExpertise(requestParameters: ListExpertiseRequest): Promise<Array<EntExpertise>> {
+        const response = await this.listExpertiseRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * list position entities
+     * List position entities
+     */
+    async listPositionRaw(requestParameters: ListPositionRequest): Promise<runtime.ApiResponse<Array<EntPosition>>> {
+        const queryParameters: runtime.HTTPQuery = {};
+
+        if (requestParameters.limit !== undefined) {
+            queryParameters['limit'] = requestParameters.limit;
+        }
+
+        if (requestParameters.offset !== undefined) {
+            queryParameters['offset'] = requestParameters.offset;
+        }
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        const response = await this.request({
+            path: `/positions`,
+            method: 'GET',
+            headers: headerParameters,
+            query: queryParameters,
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => jsonValue.map(EntPositionFromJSON));
+    }
+
+    /**
+     * list position entities
+     * List position entities
+     */
+    async listPosition(requestParameters: ListPositionRequest): Promise<Array<EntPosition>> {
+        const response = await this.listPositionRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
      * list user entities
      * List user entities
      */
@@ -179,6 +662,123 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async listUser(requestParameters: ListUserRequest): Promise<Array<EntUser>> {
         const response = await this.listUserRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * update department by ID
+     * Update a department entity by ID
+     */
+    async updateDepartmentRaw(requestParameters: UpdateDepartmentRequest): Promise<runtime.ApiResponse<EntDepartment>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling updateDepartment.');
+        }
+
+        if (requestParameters.department === null || requestParameters.department === undefined) {
+            throw new runtime.RequiredError('department','Required parameter requestParameters.department was null or undefined when calling updateDepartment.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/departments/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EntDepartmentToJSON(requestParameters.department),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntDepartmentFromJSON(jsonValue));
+    }
+
+    /**
+     * update department by ID
+     * Update a department entity by ID
+     */
+    async updateDepartment(requestParameters: UpdateDepartmentRequest): Promise<EntDepartment> {
+        const response = await this.updateDepartmentRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * update expertise by ID
+     * Update a expertise entity by ID
+     */
+    async updateExpertiseRaw(requestParameters: UpdateExpertiseRequest): Promise<runtime.ApiResponse<EntExpertise>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling updateExpertise.');
+        }
+
+        if (requestParameters.expertise === null || requestParameters.expertise === undefined) {
+            throw new runtime.RequiredError('expertise','Required parameter requestParameters.expertise was null or undefined when calling updateExpertise.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/expertises/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EntExpertiseToJSON(requestParameters.expertise),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntExpertiseFromJSON(jsonValue));
+    }
+
+    /**
+     * update expertise by ID
+     * Update a expertise entity by ID
+     */
+    async updateExpertise(requestParameters: UpdateExpertiseRequest): Promise<EntExpertise> {
+        const response = await this.updateExpertiseRaw(requestParameters);
+        return await response.value();
+    }
+
+    /**
+     * update position by ID
+     * Update a position entity by ID
+     */
+    async updatePositionRaw(requestParameters: UpdatePositionRequest): Promise<runtime.ApiResponse<EntPosition>> {
+        if (requestParameters.id === null || requestParameters.id === undefined) {
+            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling updatePosition.');
+        }
+
+        if (requestParameters.position === null || requestParameters.position === undefined) {
+            throw new runtime.RequiredError('position','Required parameter requestParameters.position was null or undefined when calling updatePosition.');
+        }
+
+        const queryParameters: runtime.HTTPQuery = {};
+
+        const headerParameters: runtime.HTTPHeaders = {};
+
+        headerParameters['Content-Type'] = 'application/json';
+
+        const response = await this.request({
+            path: `/positions/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
+            method: 'PUT',
+            headers: headerParameters,
+            query: queryParameters,
+            body: EntPositionToJSON(requestParameters.position),
+        });
+
+        return new runtime.JSONApiResponse(response, (jsonValue) => EntPositionFromJSON(jsonValue));
+    }
+
+    /**
+     * update position by ID
+     * Update a position entity by ID
+     */
+    async updatePosition(requestParameters: UpdatePositionRequest): Promise<EntPosition> {
+        const response = await this.updatePositionRaw(requestParameters);
         return await response.value();
     }
 

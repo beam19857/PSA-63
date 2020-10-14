@@ -4,8 +4,8 @@ package position
 
 import (
 	"github.com/beam19857/app/ent/predicate"
-	"github.com/facebook/ent/dialect/sql"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
 )
 
 // ID filters vertices based on their identifier.
@@ -91,93 +91,10 @@ func IDLTE(id int) predicate.Position {
 	})
 }
 
-// PositionID applies equality check predicate on the "PositionID" field. It's identical to PositionIDEQ.
-func PositionID(v int) predicate.Position {
-	return predicate.Position(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPositionID), v))
-	})
-}
-
 // PositionName applies equality check predicate on the "PositionName" field. It's identical to PositionNameEQ.
 func PositionName(v string) predicate.Position {
 	return predicate.Position(func(s *sql.Selector) {
 		s.Where(sql.EQ(s.C(FieldPositionName), v))
-	})
-}
-
-// PositionIDEQ applies the EQ predicate on the "PositionID" field.
-func PositionIDEQ(v int) predicate.Position {
-	return predicate.Position(func(s *sql.Selector) {
-		s.Where(sql.EQ(s.C(FieldPositionID), v))
-	})
-}
-
-// PositionIDNEQ applies the NEQ predicate on the "PositionID" field.
-func PositionIDNEQ(v int) predicate.Position {
-	return predicate.Position(func(s *sql.Selector) {
-		s.Where(sql.NEQ(s.C(FieldPositionID), v))
-	})
-}
-
-// PositionIDIn applies the In predicate on the "PositionID" field.
-func PositionIDIn(vs ...int) predicate.Position {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Position(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.In(s.C(FieldPositionID), v...))
-	})
-}
-
-// PositionIDNotIn applies the NotIn predicate on the "PositionID" field.
-func PositionIDNotIn(vs ...int) predicate.Position {
-	v := make([]interface{}, len(vs))
-	for i := range v {
-		v[i] = vs[i]
-	}
-	return predicate.Position(func(s *sql.Selector) {
-		// if not arguments were provided, append the FALSE constants,
-		// since we can't apply "IN ()". This will make this predicate falsy.
-		if len(v) == 0 {
-			s.Where(sql.False())
-			return
-		}
-		s.Where(sql.NotIn(s.C(FieldPositionID), v...))
-	})
-}
-
-// PositionIDGT applies the GT predicate on the "PositionID" field.
-func PositionIDGT(v int) predicate.Position {
-	return predicate.Position(func(s *sql.Selector) {
-		s.Where(sql.GT(s.C(FieldPositionID), v))
-	})
-}
-
-// PositionIDGTE applies the GTE predicate on the "PositionID" field.
-func PositionIDGTE(v int) predicate.Position {
-	return predicate.Position(func(s *sql.Selector) {
-		s.Where(sql.GTE(s.C(FieldPositionID), v))
-	})
-}
-
-// PositionIDLT applies the LT predicate on the "PositionID" field.
-func PositionIDLT(v int) predicate.Position {
-	return predicate.Position(func(s *sql.Selector) {
-		s.Where(sql.LT(s.C(FieldPositionID), v))
-	})
-}
-
-// PositionIDLTE applies the LTE predicate on the "PositionID" field.
-func PositionIDLTE(v int) predicate.Position {
-	return predicate.Position(func(s *sql.Selector) {
-		s.Where(sql.LTE(s.C(FieldPositionID), v))
 	})
 }
 

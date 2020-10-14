@@ -28,7 +28,7 @@ type User struct {
 // @ID create-user
 // @Accept   json
 // @Produce  json
-// @Param user body ent.User true "User entity"
+// @Param user body User true "User entity"
 // @Success 200 {object} ent.User
 // @Failure 400 {object} gin.H
 // @Failure 500 {object} gin.H
@@ -44,7 +44,6 @@ func (ctl *UserController) CreateUser(c *gin.Context) {
 
 	u, err := ctl.client.User.
 		Create().
-		SetDoctorID(obj.DoctorID).
 		SetDoctorName(obj.DoctorName).
 		SetDoctorEmail(obj.DoctorEmail).
 		Save(context.Background())

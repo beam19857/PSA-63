@@ -16,8 +16,8 @@ type ExpertiseController struct {
 	router gin.IRouter
 }
 type Expertise struct {
-	ExpertiseName string
-	//ExpertiseID int
+	ExpertiseID int
+	ExpertiseName string	
 }
 
 // CreateExpertise handles POST requests for adding expertise entities
@@ -42,7 +42,6 @@ func (ctl *ExpertiseController) CreateExpertise(c *gin.Context) {
 
 	u, err := ctl.client.Expertise.
 		Create().
-		SetExpertiseID(obj.ExpertiseID).
 		SetExpertiseName(obj.ExpertiseName).
 		Save(context.Background())
 	if err != nil {

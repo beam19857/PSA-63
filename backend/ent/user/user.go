@@ -7,14 +7,10 @@ const (
 	Label = "user"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldDoctorID holds the string denoting the doctorid field in the database.
-	FieldDoctorID = "doctor_id"
 	// FieldDoctorName holds the string denoting the doctorname field in the database.
 	FieldDoctorName = "doctor_name"
-	// FieldDoctorEmail holds the string denoting the date field in the database.
+	// FieldDoctorEmail holds the string denoting the doctoremail field in the database.
 	FieldDoctorEmail = "doctor_email"
-	// FieldDate holds the string denoting the date field in the database.
-	FieldDate = "date"
 
 	// EdgeUserDepartment holds the string denoting the userdepartment edge name in mutations.
 	EdgeUserDepartment = "UserDepartment"
@@ -31,35 +27,33 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "department" package.
 	UserDepartmentInverseTable = "departments"
 	// UserDepartmentColumn is the table column denoting the UserDepartment relation/edge.
-	UserDepartmentColumn = "department_department_user"
+	UserDepartmentColumn = "DepartmentID"
 	// UserExpertiseTable is the table the holds the UserExpertise relation/edge.
 	UserExpertiseTable = "users"
 	// UserExpertiseInverseTable is the table name for the Expertise entity.
 	// It exists in this package in order to avoid circular dependency with the "expertise" package.
 	UserExpertiseInverseTable = "expertises"
 	// UserExpertiseColumn is the table column denoting the UserExpertise relation/edge.
-	UserExpertiseColumn = "expertise_expertise_user"
+	UserExpertiseColumn = "ExpertiseID"
 	// UserPositionTable is the table the holds the UserPosition relation/edge.
 	UserPositionTable = "users"
 	// UserPositionInverseTable is the table name for the Position entity.
 	// It exists in this package in order to avoid circular dependency with the "position" package.
 	UserPositionInverseTable = "positions"
 	// UserPositionColumn is the table column denoting the UserPosition relation/edge.
-	UserPositionColumn = "position_position_user"
+	UserPositionColumn = "PositionID"
 )
 
 // Columns holds all SQL columns for user fields.
 var Columns = []string{
 	FieldID,
-	FieldDoctorID,
-	FieldDoctorEmail,
 	FieldDoctorName,
-	FieldDate,
+	FieldDoctorEmail,
 }
 
 // ForeignKeys holds the SQL foreign-keys that are owned by the User type.
 var ForeignKeys = []string{
-	"department_department_user",
-	"expertise_expertise_user",
-	"position_position_user",
+	"DepartmentID",
+	"ExpertiseID",
+	"PositionID",
 }

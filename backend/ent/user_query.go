@@ -13,9 +13,9 @@ import (
 	"github.com/beam19857/app/ent/position"
 	"github.com/beam19857/app/ent/predicate"
 	"github.com/beam19857/app/ent/user"
-	"github.com/facebook/ent/dialect/sql"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
-	"github.com/facebook/ent/schema/field"
+	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // UserQuery is the builder for querying User entities.
@@ -332,12 +332,12 @@ func (uq *UserQuery) WithUserPosition(opts ...func(*PositionQuery)) *UserQuery {
 // Example:
 //
 //	var v []struct {
-//		DoctorID int `json:"DoctorID,omitempty"`
+//		DoctorName string `json:"DoctorName,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.User.Query().
-//		GroupBy(user.FieldDoctorID).
+//		GroupBy(user.FieldDoctorName).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 //
@@ -358,11 +358,11 @@ func (uq *UserQuery) GroupBy(field string, fields ...string) *UserGroupBy {
 // Example:
 //
 //	var v []struct {
-//		DoctorID int `json:"DoctorID,omitempty"`
+//		DoctorName string `json:"DoctorName,omitempty"`
 //	}
 //
 //	client.User.Query().
-//		Select(user.FieldDoctorID).
+//		Select(user.FieldDoctorName).
 //		Scan(ctx, &v)
 //
 func (uq *UserQuery) Select(field string, fields ...string) *UserSelect {
@@ -433,7 +433,7 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*User)
 		for i := range nodes {
-			if fk := nodes[i].department_department_user; fk != nil {
+			if fk := nodes[i].DepartmentID; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
@@ -446,7 +446,7 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "department_department_user" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "DepartmentID" returned %v`, n.ID)
 			}
 			for i := range nodes {
 				nodes[i].Edges.UserDepartment = n
@@ -458,7 +458,7 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*User)
 		for i := range nodes {
-			if fk := nodes[i].expertise_expertise_user; fk != nil {
+			if fk := nodes[i].ExpertiseID; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
@@ -471,7 +471,7 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "expertise_expertise_user" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "ExpertiseID" returned %v`, n.ID)
 			}
 			for i := range nodes {
 				nodes[i].Edges.UserExpertise = n
@@ -483,7 +483,7 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 		ids := make([]int, 0, len(nodes))
 		nodeids := make(map[int][]*User)
 		for i := range nodes {
-			if fk := nodes[i].position_position_user; fk != nil {
+			if fk := nodes[i].PositionID; fk != nil {
 				ids = append(ids, *fk)
 				nodeids[*fk] = append(nodeids[*fk], nodes[i])
 			}
@@ -496,7 +496,7 @@ func (uq *UserQuery) sqlAll(ctx context.Context) ([]*User, error) {
 		for _, n := range neighbors {
 			nodes, ok := nodeids[n.ID]
 			if !ok {
-				return nil, fmt.Errorf(`unexpected foreign-key "position_position_user" returned %v`, n.ID)
+				return nil, fmt.Errorf(`unexpected foreign-key "PositionID" returned %v`, n.ID)
 			}
 			for i := range nodes {
 				nodes[i].Edges.UserPosition = n

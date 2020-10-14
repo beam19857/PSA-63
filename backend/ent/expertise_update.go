@@ -9,9 +9,9 @@ import (
 	"github.com/beam19857/app/ent/expertise"
 	"github.com/beam19857/app/ent/predicate"
 	"github.com/beam19857/app/ent/user"
-	"github.com/facebook/ent/dialect/sql"
-	"github.com/facebook/ent/dialect/sql/sqlgraph"
-	"github.com/facebook/ent/schema/field"
+	"github.com/facebookincubator/ent/dialect/sql"
+	"github.com/facebookincubator/ent/dialect/sql/sqlgraph"
+	"github.com/facebookincubator/ent/schema/field"
 )
 
 // ExpertiseUpdate is the builder for updating Expertise entities.
@@ -28,28 +28,9 @@ func (eu *ExpertiseUpdate) Where(ps ...predicate.Expertise) *ExpertiseUpdate {
 	return eu
 }
 
-// SetExpertiseID sets the ExpertiseID field.
-func (eu *ExpertiseUpdate) SetExpertiseID(i int) *ExpertiseUpdate {
-	eu.mutation.ResetExpertiseID()
-	eu.mutation.SetExpertiseID(i)
-	return eu
-}
-
-// AddExpertiseID adds i to ExpertiseID.
-func (eu *ExpertiseUpdate) AddExpertiseID(i int) *ExpertiseUpdate {
-	eu.mutation.AddExpertiseID(i)
-	return eu
-}
-
 // SetExpertiseName sets the ExpertiseName field.
 func (eu *ExpertiseUpdate) SetExpertiseName(s string) *ExpertiseUpdate {
 	eu.mutation.SetExpertiseName(s)
-	return eu
-}
-
-// SetLicenes sets the Licenes field.
-func (eu *ExpertiseUpdate) SetLicenes(s string) *ExpertiseUpdate {
-	eu.mutation.SetLicenes(s)
 	return eu
 }
 
@@ -158,32 +139,11 @@ func (eu *ExpertiseUpdate) sqlSave(ctx context.Context) (n int, err error) {
 			}
 		}
 	}
-	if value, ok := eu.mutation.ExpertiseID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: expertise.FieldExpertiseID,
-		})
-	}
-	if value, ok := eu.mutation.AddedExpertiseID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: expertise.FieldExpertiseID,
-		})
-	}
 	if value, ok := eu.mutation.ExpertiseName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: expertise.FieldExpertiseName,
-		})
-	}
-	if value, ok := eu.mutation.Licenes(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: expertise.FieldLicenes,
 		})
 	}
 	if nodes := eu.mutation.RemovedExpertiseUserIDs(); len(nodes) > 0 {
@@ -242,28 +202,9 @@ type ExpertiseUpdateOne struct {
 	mutation *ExpertiseMutation
 }
 
-// SetExpertiseID sets the ExpertiseID field.
-func (euo *ExpertiseUpdateOne) SetExpertiseID(i int) *ExpertiseUpdateOne {
-	euo.mutation.ResetExpertiseID()
-	euo.mutation.SetExpertiseID(i)
-	return euo
-}
-
-// AddExpertiseID adds i to ExpertiseID.
-func (euo *ExpertiseUpdateOne) AddExpertiseID(i int) *ExpertiseUpdateOne {
-	euo.mutation.AddExpertiseID(i)
-	return euo
-}
-
 // SetExpertiseName sets the ExpertiseName field.
 func (euo *ExpertiseUpdateOne) SetExpertiseName(s string) *ExpertiseUpdateOne {
 	euo.mutation.SetExpertiseName(s)
-	return euo
-}
-
-// SetLicenes sets the Licenes field.
-func (euo *ExpertiseUpdateOne) SetLicenes(s string) *ExpertiseUpdateOne {
-	euo.mutation.SetLicenes(s)
 	return euo
 }
 
@@ -370,32 +311,11 @@ func (euo *ExpertiseUpdateOne) sqlSave(ctx context.Context) (e *Expertise, err e
 		return nil, &ValidationError{Name: "ID", err: fmt.Errorf("missing Expertise.ID for update")}
 	}
 	_spec.Node.ID.Value = id
-	if value, ok := euo.mutation.ExpertiseID(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: expertise.FieldExpertiseID,
-		})
-	}
-	if value, ok := euo.mutation.AddedExpertiseID(); ok {
-		_spec.Fields.Add = append(_spec.Fields.Add, &sqlgraph.FieldSpec{
-			Type:   field.TypeInt,
-			Value:  value,
-			Column: expertise.FieldExpertiseID,
-		})
-	}
 	if value, ok := euo.mutation.ExpertiseName(); ok {
 		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
 			Type:   field.TypeString,
 			Value:  value,
 			Column: expertise.FieldExpertiseName,
-		})
-	}
-	if value, ok := euo.mutation.Licenes(); ok {
-		_spec.Fields.Set = append(_spec.Fields.Set, &sqlgraph.FieldSpec{
-			Type:   field.TypeString,
-			Value:  value,
-			Column: expertise.FieldLicenes,
 		})
 	}
 	if nodes := euo.mutation.RemovedExpertiseUserIDs(); len(nodes) > 0 {

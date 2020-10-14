@@ -7,8 +7,6 @@ const (
 	Label = "position"
 	// FieldID holds the string denoting the id field in the database.
 	FieldID = "id"
-	// FieldPositionID holds the string denoting the positionid field in the database.
-	FieldPositionID = "position_id"
 	// FieldPositionName holds the string denoting the positionname field in the database.
 	FieldPositionName = "position_name"
 
@@ -23,12 +21,11 @@ const (
 	// It exists in this package in order to avoid circular dependency with the "user" package.
 	PositionUserInverseTable = "users"
 	// PositionUserColumn is the table column denoting the PositionUser relation/edge.
-	PositionUserColumn = "position_position_user"
+	PositionUserColumn = "PositionID"
 )
 
 // Columns holds all SQL columns for position fields.
 var Columns = []string{
 	FieldID,
-	FieldPositionID,
 	FieldPositionName,
 }
