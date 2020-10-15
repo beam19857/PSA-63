@@ -801,49 +801,6 @@ var doc = `{
             }
         },
         "/users/{id}": {
-            "get": {
-                "description": "get user by ID",
-                "produces": [
-                    "application/json"
-                ],
-                "summary": "Get a user entity by ID",
-                "operationId": "get-user",
-                "parameters": [
-                    {
-                        "type": "integer",
-                        "description": "User ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
-                        "schema": {
-                            "$ref": "#/definitions/ent.User"
-                        }
-                    },
-                    "400": {
-                        "description": "Bad Request",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "404": {
-                        "description": "Not Found",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    },
-                    "500": {
-                        "description": "Internal Server Error",
-                        "schema": {
-                            "$ref": "#/definitions/gin.H"
-                        }
-                    }
-                }
-            },
             "put": {
                 "description": "update user by ID",
                 "consumes": [
@@ -942,14 +899,20 @@ var doc = `{
         "controllers.User": {
             "type": "object",
             "properties": {
+                "department": {
+                    "type": "integer"
+                },
                 "doctorEmail": {
                     "type": "string"
                 },
-                "doctorID": {
-                    "type": "integer"
-                },
                 "doctorName": {
                     "type": "string"
+                },
+                "expertise": {
+                    "type": "integer"
+                },
+                "position": {
+                    "type": "integer"
                 }
             }
         },

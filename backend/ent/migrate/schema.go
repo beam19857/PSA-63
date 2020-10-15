@@ -11,7 +11,7 @@ var (
 	// DepartmentsColumns holds the columns for the "departments" table.
 	DepartmentsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "department_name", Type: field.TypeString},
+		{Name: "department_name", Type: field.TypeString, Unique: true},
 	}
 	// DepartmentsTable holds the schema information for the "departments" table.
 	DepartmentsTable = &schema.Table{
@@ -23,7 +23,7 @@ var (
 	// ExpertisesColumns holds the columns for the "expertises" table.
 	ExpertisesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "expertise_name", Type: field.TypeString},
+		{Name: "expertise_name", Type: field.TypeString, Unique: true},
 	}
 	// ExpertisesTable holds the schema information for the "expertises" table.
 	ExpertisesTable = &schema.Table{
@@ -35,7 +35,7 @@ var (
 	// PositionsColumns holds the columns for the "positions" table.
 	PositionsColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "position_name", Type: field.TypeString},
+		{Name: "position_name", Type: field.TypeString, Unique: true},
 	}
 	// PositionsTable holds the schema information for the "positions" table.
 	PositionsTable = &schema.Table{

@@ -21,22 +21,34 @@ import { exists, mapValues } from '../runtime';
 export interface ControllersUser {
     /**
      * 
+     * @type {number}
+     * @memberof ControllersUser
+     */
+    department?: number;
+    /**
+     * 
      * @type {string}
      * @memberof ControllersUser
      */
     doctorEmail?: string;
     /**
      * 
-     * @type {number}
-     * @memberof ControllersUser
-     */
-    doctorID?: number;
-    /**
-     * 
      * @type {string}
      * @memberof ControllersUser
      */
     doctorName?: string;
+    /**
+     * 
+     * @type {number}
+     * @memberof ControllersUser
+     */
+    expertise?: number;
+    /**
+     * 
+     * @type {number}
+     * @memberof ControllersUser
+     */
+    position?: number;
 }
 
 export function ControllersUserFromJSON(json: any): ControllersUser {
@@ -49,9 +61,11 @@ export function ControllersUserFromJSONTyped(json: any, ignoreDiscriminator: boo
     }
     return {
         
+        'department': !exists(json, 'department') ? undefined : json['department'],
         'doctorEmail': !exists(json, 'doctorEmail') ? undefined : json['doctorEmail'],
-        'doctorID': !exists(json, 'doctorID') ? undefined : json['doctorID'],
         'doctorName': !exists(json, 'doctorName') ? undefined : json['doctorName'],
+        'expertise': !exists(json, 'expertise') ? undefined : json['expertise'],
+        'position': !exists(json, 'position') ? undefined : json['position'],
     };
 }
 
@@ -64,9 +78,11 @@ export function ControllersUserToJSON(value?: ControllersUser | null): any {
     }
     return {
         
+        'department': value.department,
         'doctorEmail': value.doctorEmail,
-        'doctorID': value.doctorID,
         'doctorName': value.doctorName,
+        'expertise': value.expertise,
+        'position': value.position,
     };
 }
 

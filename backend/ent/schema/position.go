@@ -14,7 +14,7 @@ type Position struct {
 // Fields of the Position.
 func (Position) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("PositionName"),
+		field.String("PositionName").Unique(),
 
 	}
 }

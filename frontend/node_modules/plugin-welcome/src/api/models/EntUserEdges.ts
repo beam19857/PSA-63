@@ -64,9 +64,9 @@ export function EntUserEdgesFromJSONTyped(json: any, ignoreDiscriminator: boolea
     }
     return {
         
-        'userDepartment': !exists(json, 'userDepartment') ? undefined : EntDepartmentFromJSON(json['userDepartment']),
-        'userExpertise': !exists(json, 'userExpertise') ? undefined : EntExpertiseFromJSON(json['userExpertise']),
-        'userPosition': !exists(json, 'userPosition') ? undefined : EntPositionFromJSON(json['userPosition']),
+        'userDepartment': !exists(json, 'UserDepartment') ? undefined : EntDepartmentFromJSON(json['UserDepartment']),
+        'userExpertise': !exists(json, 'UserExpertise') ? undefined : EntExpertiseFromJSON(json['UserExpertise']),
+        'userPosition': !exists(json, 'UserPosition') ? undefined : EntPositionFromJSON(json['UserPosition']),
     };
 }
 

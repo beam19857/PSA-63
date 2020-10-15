@@ -15,7 +15,7 @@ type Expertise struct {
 // Fields of the Expertise.
 func (Expertise) Fields() []ent.Field {
 	return []ent.Field{
-		field.String("ExpertiseName"),
+		field.String("ExpertiseName").Unique(),
 	}
 }
 

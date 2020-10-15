@@ -76,10 +76,6 @@ export interface GetPositionRequest {
     id: number;
 }
 
-export interface GetUserRequest {
-    id: number;
-}
-
 export interface ListDepartmentRequest {
     limit?: number;
     offset?: number;
@@ -486,38 +482,6 @@ export class DefaultApi extends runtime.BaseAPI {
      */
     async getPosition(requestParameters: GetPositionRequest): Promise<EntPosition> {
         const response = await this.getPositionRaw(requestParameters);
-        return await response.value();
-    }
-
-    /**
-     * get user by ID
-     * Get a user entity by ID
-     */
-    async getUserRaw(requestParameters: GetUserRequest): Promise<runtime.ApiResponse<EntUser>> {
-        if (requestParameters.id === null || requestParameters.id === undefined) {
-            throw new runtime.RequiredError('id','Required parameter requestParameters.id was null or undefined when calling getUser.');
-        }
-
-        const queryParameters: runtime.HTTPQuery = {};
-
-        const headerParameters: runtime.HTTPHeaders = {};
-
-        const response = await this.request({
-            path: `/users/{id}`.replace(`{${"id"}}`, encodeURIComponent(String(requestParameters.id))),
-            method: 'GET',
-            headers: headerParameters,
-            query: queryParameters,
-        });
-
-        return new runtime.JSONApiResponse(response, (jsonValue) => EntUserFromJSON(jsonValue));
-    }
-
-    /**
-     * get user by ID
-     * Get a user entity by ID
-     */
-    async getUser(requestParameters: GetUserRequest): Promise<EntUser> {
-        const response = await this.getUserRaw(requestParameters);
         return await response.value();
     }
 

@@ -6,7 +6,9 @@ import (
 	"strconv"
 
 	"github.com/beam19857/app/ent"
-	"github.com/beam19857/app/ent/user"
+	"github.com/beam19857/app/ent/department"
+	"github.com/beam19857/app/ent/expertise"
+	"github.com/beam19857/app/ent/position"
 	"github.com/gin-gonic/gin"
 )
 
@@ -17,9 +19,11 @@ type UserController struct {
 }
 
 type User struct {
-	DoctorName string
+	DoctorName  string
 	DoctorEmail string
-	DoctorID int
+	Department  int
+	Expertise   int
+	Position    int
 }
 
 // CreateUser handles POST requests for adding user entities
@@ -34,10 +38,46 @@ type User struct {
 // @Failure 500 {object} gin.H
 // @Router /users [post]
 func (ctl *UserController) CreateUser(c *gin.Context) {
-	obj := ent.User{}
+	obj := User{}
 	if err := c.ShouldBind(&obj); err != nil {
 		c.JSON(400, gin.H{
 			"error": "user binding failed",
+		})
+		return
+	}
+
+	d, err := ctl.client.Department.
+		Query().
+		Where(department.IDEQ(int(obj.Department))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "department not found",
+		})
+		return
+	}
+
+	e, err := ctl.client.Expertise.
+		Query().
+		Where(expertise.IDEQ(int(obj.Expertise))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "expertise not found",
+		})
+		return
+	}
+
+	p, err := ctl.client.Position.
+		Query().
+		Where(position.IDEQ(int(obj.Position))).
+		Only(context.Background())
+
+	if err != nil {
+		c.JSON(400, gin.H{
+			"error": "position not found",
 		})
 		return
 	}
@@ -46,44 +86,13 @@ func (ctl *UserController) CreateUser(c *gin.Context) {
 		Create().
 		SetDoctorName(obj.DoctorName).
 		SetDoctorEmail(obj.DoctorEmail).
+		SetUserDepartment(d).
+		SetUserExpertise(e).
+		SetUserPosition(p).
 		Save(context.Background())
 	if err != nil {
 		c.JSON(400, gin.H{
 			"error": "saving failed",
-		})
-		return
-	}
-
-	c.JSON(200, u)
-}
-
-// GetUser handles GET requests to retrieve a user entity
-// @Summary Get a user entity by ID
-// @Description get user by ID
-// @ID get-user
-// @Produce  json
-// @Param id path int true "User ID"
-// @Success 200 {object} ent.User
-// @Failure 400 {object} gin.H
-// @Failure 404 {object} gin.H
-// @Failure 500 {object} gin.H
-// @Router /users/{id} [get]
-func (ctl *UserController) GetUser(c *gin.Context) {
-	id, err := strconv.ParseInt(c.Param("id"), 10, 64)
-	if err != nil {
-		c.JSON(400, gin.H{
-			"error": err.Error(),
-		})
-		return
-	}
-
-	u, err := ctl.client.User.
-		Query().
-		Where(user.IDEQ(int(id))).
-		Only(context.Background())
-	if err != nil {
-		c.JSON(404, gin.H{
-			"error": err.Error(),
 		})
 		return
 	}
@@ -123,6 +132,9 @@ func (ctl *UserController) ListUser(c *gin.Context) {
 
 	users, err := ctl.client.User.
 		Query().
+		WithUserDepartment().
+		WithUserExpertise().
+		WithUserPosition().
 		Limit(limit).
 		Offset(offset).
 		All(context.Background())
@@ -225,7 +237,6 @@ func (ctl *UserController) register() {
 
 	// CRUD
 	users.POST("", ctl.CreateUser)
-	users.GET(":id", ctl.GetUser)
 	users.PUT(":id", ctl.UpdateUser)
 	users.DELETE(":id", ctl.DeleteUser)
 }
