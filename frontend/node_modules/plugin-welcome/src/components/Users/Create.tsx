@@ -60,13 +60,6 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface userInformation {
-  doctorName: string;
-  doctorEmail: string;  
-  department: number; 
-  position: number;
-  expertise: number;
-}
  
 export default function UserInformation() {
  const classes = useStyles();
@@ -117,12 +110,6 @@ export default function UserInformation() {
 }, [loading]);
 
 
-const getUser = async () => {
-  const res = await http.listUser({ limit: 10, offset: 0 });
-  setUser(res);
-};
-
- 
 const handleDoctorNameChange = (event: any) => {
   setDoctorName(event.target.value as string);
 };

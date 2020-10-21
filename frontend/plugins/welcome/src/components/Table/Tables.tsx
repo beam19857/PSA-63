@@ -9,7 +9,6 @@ import TableRow from '@material-ui/core/TableRow';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
 import { DefaultApi } from '../../api/apis';
-import DeleteIcon from '@material-ui/icons/Delete';
 import {
   Content,
   Header,
@@ -19,7 +18,6 @@ import {
 import PersonAddRoundedIcon from '@material-ui/icons/PersonAddRounded';
 import HomeRoundedIcon from '@material-ui/icons/HomeRounded';
 import { EntUser } from '../../api/models/EntUser';
-import { ControllersUser } from '../../api';
  
 const useStyles = makeStyles({
  table: {
